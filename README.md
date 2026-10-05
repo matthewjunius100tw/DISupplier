@@ -9,4 +9,6 @@ DISupplier is a web-based supplier and procurement management platform developed
 | Ambrosius Matthew Junius Reynaldo | D11505806 |
 | 林宗群 | M11505501 |
 
-### Planned Website
+### Planned Website:
+
+This is the organizational chart for Digital Idea Solution Website and DISupplier
