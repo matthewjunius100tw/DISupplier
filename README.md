@@ -18,9 +18,11 @@ This is the organizational chart for Digital Idea Solution Website and DISupplie
 flowchart LR
 
     %% Style Definition
-    classDef highPriority fill:#ff9999,stroke:#333,stroke-width:2px,color:#fff; 
-    classDef medPriority fill:#ffcc99,stroke:#333,stroke-width:2px,color:#fff; 
-    classDef lowPriority fill:#99ccff,stroke:#333,stroke-width:2px,color:#fff;
+    classDef highPriority fill:#ff9999,stroke:#333,stroke-width:2.5px,color:#fff; 
+    classDef medPriority fill:#ffcc99,stroke:#333,stroke-width:2.5px,color:#fff; 
+    classDef lowPriority fill:#99ccff,stroke:#333,stroke-width:2.5px,color:#fff;
+    classDef coreWeb fill:#243447,stroke:#4da3ff,stroke-width:3px,color:#fff;
+    classDef publicWeb fill:#2f3542,stroke:#4da3ff,stroke-width:3px,color:#fff;
 
     %% Website Entry
     A[Digital Idea Solution <br> Website]
@@ -28,67 +30,87 @@ flowchart LR
     %% Public Website (B for Public)
     subgraph Public["Public Website"]
         direction TB
-        B1["Homepage<br>(Matthew)"]
-        B2["Solutions<br>(Matthew)"]
-        B3["Who We Serve<br>(林宗群)"]
-        B4["Pricing<br>(林宗群)"]
-        B5["Our Story<br>(Matthew)"]
-        L["Login<br>(Matthew)"]
-        B6["Contact Us<br>(林宗群)"]
-        B7["Join Our Team<br>(林宗群)"]
+        B1["Homepage<br/>(Matthew)"]
+        B2["Solutions<br/>(Matthew)"]
+        B3["Who We Serve<br/>(林宗群)"]
+        B4["Pricing<br/>(林宗群)"]
+        B5["Our Story<br/>(Matthew)"]
+        L["Login<br/>(Matthew)"]
+        B6["Contact Us<br/>(林宗群)"]
+        B7["Join Our Team<br/>(林宗群)"]
     
     end
 
 %% DISupplier Core Platform Subgraph (Post-Login)
     subgraph CoreSystem["DISupplier Core Platform"]
         direction TB
-        C1["Dashboard<br>(林宗群)"]
+        C1["Dashboard<br/>(林宗群)"]
 
-        C2["User Management<br>(林宗群)"]
-        C2_1["Create User<br>(林宗群)"]
-        C2_2["Assign User Roles<br>(林宗群)"]
-        C2_3["View User<br>(林宗群)"]
-        C2_4["Edit User<br>(林宗群)"]
-        C2_5["Change Permissions<br>(林宗群)"]
-        C2_6["Deactivate User<br>(林宗群)"]
+        C2["User Management<br/>(林宗群)"]
+        C2_1["Create User<br/>(林宗群)"]
+        C2_2["Assign User Roles<br/>(林宗群)"]
+        C2_3["View User<br/>(林宗群)"]
+        C2_4["Edit User<br/>(林宗群)"]
+        C2_5["Change Permissions<br/>(林宗群)"]
+        C2_6["Deactivate User<br/>(林宗群)"]
 
-        C3["Project Management<br>(林宗群)"]
-        C3_1["Create Project<br>(林宗群)"]
-        C3_2["View Project<br>(林宗群)"]
-        C3_3["Edit Project<br>(林宗群)"]
-        C3_4["List Projects<br>(林宗群)"]
-        C3_5["Assign Project Manager and Team<br>(林宗群)"]
+        C3["Project Management<br/>(林宗群)"]
+        C3_1["Create Project<br/>(林宗群)"]
+        C3_2["View Project<br/>(林宗群)"]
+        C3_3["Edit Project<br/>(林宗群)"]
+        C3_4["List Projects<br/>(林宗群)"]
+        C3_5["Assign Project Manager and Team<br/>(林宗群)"]
         
-        C4["Supplier Management<br>(Matthew)"]
-        C4_1["Add Supplier<br>(Matthew)"]
-        C4_2["View Supplier<br>(Matthew)"]
-        C4_3["Edit Supplier<br>(Matthew)"]
-        C4_4["List Suppliers<br>(Matthew)"]
-        C4_5["Suspend/Deactivate Supplier<br>(Matthew)"]
-        C4_6["Manage Supplier Company Profile<br>(Matthew)"]
+        C4["Supplier Management<br/>(Matthew)"]
+        C4_1["Add Supplier<br/>(Matthew)"]
+        C4_2["View Supplier<br/>(Matthew)"]
+        C4_3["Edit Supplier<br/>(Matthew)"]
+        C4_4["List Suppliers<br/>(Matthew)"]
+        C4_5["Suspend/Deactivate Supplier<br/>(Matthew)"]
+        C4_6["Manage Supplier Company<br/>(Matthew)"]
 
-        C5["Procurement and Quotation Management<br>(Matthew)"]
-        C5_1["Manage RFQ<br>(Matthew)"]
-        C5_2["Manage Quotation<br>(Matthew)"]
-        C5_3["Manage Purchase Order<br>(Matthew)"]
+        C5["Procurement and Quotation Management<br/>(Matthew)"]
+        C5_1["Manage RFQ<br/>(Matthew)"]
+        C5_1_1["Create RFQ<br/>(Matthew)"]
+        C5_1_2["Select Materials and Suppliers for RFQ<br/>(Matthew)"]
+        C5_1_3["Send RFQ<br/>(Matthew)"]
+        C5_2["Manage Quotation<br/>(Matthew)"]
+        C5_2_1["Receive and View Quotation<br/>(Matthew)"]
+        C5_2_2["Compare and Evaluate Quotation<br/>(Matthew)"]
+        C5_2_3["Select Supplier<br/>(Matthew)"]
+        C5_3["Manage Purchase Order<br/>(Matthew)"]
+        C5_3_1["Create Purchase Order<br/>(Matthew)"]
+        C5_3_2["View Purchase Order<br/>(Matthew)"]
+        C5_3_3["Approve Purchase Order<br/>(Matthew)"]
+        C5_3_4["Revise/Cancel Purchase Order<br/>(Matthew)"]
 
-        C6["Site Operation Management<br>(Matthew)"]
-        C6_1["Manage Material Delivery<br>(Matthew)"]
-        C6_2["Manage Site Requirements<br>(Matthew)"]
+        C6["Site Operation Management<br/>(Matthew)"]
+        C6_1["Manage Material Delivery<br/>(Matthew)"]
+        C6_1_1["View Expected Delivery<br/>(Matthew)"]
+        C6_1_2["Confirm Delivery<br/>(Matthew)"]
+        C6_1_3["Record Quantity Recieved<br/>(Matthew)"]
+        C6_1_4["Record Damaged and Rejected Items<br/>(Matthew)"]
+        C6_2["Manage Site Requirements<br/>(Matthew)"]
+        C6_2_1["Record Material Shortage<br/>(Matthew)"]
+        C6_2_2["Record Material Usage<br/(Matthew)">]
 
-        C7["Material Management<br>(林宗群)"]
-        C7_1["Add Material<br>(林宗群)"]
-        C7_2["View Material<br>(林宗群)"]
-        C7_3["Edit Material<br>(林宗群)"]
-        C7_4["List MaterialS<br>(林宗群)"]
+        C7["Material Management<br/>(林宗群)"]
+        C7_1["Add Material<br/>(林宗群)"]
+        C7_2["View Material<br/>(林宗群)"]
+        C7_3["Edit Material<br/>(林宗群)"]
+        C7_4["List MaterialS<br/>(林宗群)"]
 
-        C8["Supplier Performance Evaluation<br>(Matthew)"]
-        C8_1["Basic Report<br>(Matthew)"]
-        C8_2["Advanced Predictive Analysis<br>(Matthew)"]
+        C8["Supplier Performance Evaluation<br/>(Matthew)"]
+        C8_1["Basic Report<br/>(Matthew)"]
+        C8_2["Advanced Predictive Analysis<br/>(Matthew)"]
 
-        C9["Financial Management<br>(林宗群)"]
-        C9_1["Manage Project Order and Payment<br>(林宗群)"]
-        C9_2["Manage Project Financial<br>(林宗群)"]
+        C9["Financial Management<br/>(林宗群)"]
+        C9_1["Manage Project Order and Payment<br/>(林宗群)"]
+        C9_1_1["View Purchase Order<br/>(林宗群)"]
+        C9_1_2["View and Record Payment Status<br/>(林宗群)"]
+        C9_2["Manage Project Financial<br/>(林宗群)"]
+        C9_2_1["Track Procurement Cost<br/>(林宗群)"]
+        C9_2_2["View Project Procurement Expenditure<br/>(林宗群)"]
 
 
     end
@@ -128,11 +150,27 @@ C4 --> C4_5
 C4 --> C4_6
 
 C5 --> C5_1
+C5_1 --> C5_1_1
+C5_1 --> C5_1_2
+C5_1 --> C5_1_3
 C5 --> C5_2
+C5_2 --> C5_2_1
+C5_2 --> C5_2_2
+C5_2 --> C5_2_3
 C5 --> C5_3
+C5_3 --> C5_3_1
+C5_3 --> C5_3_2
+C5_3 --> C5_3_3
+C5_3 --> C5_3_4
 
 C6 --> C6_1
+C6_1 --> C6_1_1
+C6_1 --> C6_1_2
+C6_1 --> C6_1_3
+C6_1 --> C6_1_4
 C6 --> C6_2
+C6_2 --> C6_2_1
+C6_2 --> C6_2_2
 
 C7 --> C7_1
 C7 --> C7_2
@@ -143,31 +181,39 @@ C8 --> C8_1
 C8 --> C8_2
 
 C9 --> C9_1
+C9_1 --> C9_1_1
+C9_1 --> C9_1_2
 C9 --> C9_2
+C9_2 --> C9_2_1
+C9_2 --> C9_2_2
+
+linkStyle default stroke:#5bc0eb,stroke-width:1.5px
 
 %% Priority Legend 
     subgraph Legend [Priority Legend]
-    direction TB
-    P1["High Priority<br>MVP (Core Features)<br>Phase 1"]
-    P2["Medium Priority<br>Feature Development<br>Phase 2"]
-    P3["Low Priority<br>Feature Development<br>Phase 3"]
-
-    %% Non Link
-    P1~~~P2~~~P3
+        direction TB
+        P1["High Priority<br>MVP (Core Features)<br>Phase 1"]
+        P2["Medium Priority<br>Feature Development<br>Phase 2"]
+        P3["Low Priority<br>Feature Development<br>Phase 3"]
     end
 
 %% Assign Classes to Nodes 
-class B1,L,C1,C2,C3,C4,P1 highPriority; 
-class B2,B4,C6,C7,P2 medPriority;
-class B3,B5,B6,B7,C5,C8,P3 lowPriority;
+class B1,B2,B3,B4,L,C1,C2,C2_1,C2_2,C2_3,C2_4,C2_5,C2_6,C3,C3_1,C3_2,C3_3,C3_4,C3_5,C4,C4_1,C4_2,C4_3,C4_4,C4_5,C4_6,C5,C5_1,C5_1_1,C5_1_2,C5_1_3,C5_2,C5_2_1,C5_2_2,C5_2_3,C5_3,C5_3_1,C5_3_2,C5_3_3,C5_3_4,C6,C6_1,C6_1_1,C6_1_2,C6_1_3,C6_1_4,C6_2,C6_2_1,C6_2_2,C7,C7_1,C7_2,C7_3,C7_4,C8,C8_1,P1 highPriority; 
+class B3,B4,B5,P2 medPriority;
+class B6,B7,C8_2,C9,C9_1,C9_1_1,C9_1_2,C9_2,C9_2_1,C9_2_2,P3 lowPriority;
+class A publicWeb;
+
+%% Apply Style to Subgraph
+style Public fill:#2f3542,stroke:#f4c95d,stroke-width:3px,color:#fff
+style CoreSystem fill:#30343b,stroke:#4da3ff,stroke-width:3px,color:#fff
 
 ```
 #### Priority Legend:
 - 🟥 **High Priority (MVP - Phase 1)**  
-Red boxes = The core features for the minimum requirement system
+Red boxes = Essential core functions required for system operatoon
 
-- 🟧 **Medium Priority (Feature Development - Phase 2)**  
-Yellow Boxes = 
+- 🟨 **Medium Priority (Feature Development - Phase 2)**  
+Yellow Boxes = Additional features that improve functionality and user experience
 
 - 🟦 **Low Priority (Feature Development - Phase 3)**  
-Blue Boxes = 
+Blue Boxes = Future enhancements and advanced features
