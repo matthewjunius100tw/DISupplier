@@ -103,6 +103,7 @@ flowchart LR
         C8["Supplier Performance Evaluation<br/>(Matthew)"]
         C8_1["Basic Report<br/>(Matthew)"]
         C8_2["Advanced Predictive Analysis<br/>(Matthew)"]
+        C8_3["Generate Supplier Recommendations<br/>(Matthew)"]
 
         C9["Financial Management<br/>(林宗群)"]
         C9_1["Manage Project Order and Payment<br/>(林宗群)"]
@@ -112,7 +113,10 @@ flowchart LR
         C9_2_1["Track Procurement Cost<br/>(林宗群)"]
         C9_2_2["View Project Procurement Expenditure<br/>(林宗群)"]
 
-
+        C10["Notification Management<br/>(Matthew)"]
+        C10_1["System Notification<br/>(Matthew)"]
+        C10_2["Automated Alerts<br/>(Matthew)"]
+        C10_3["Integrated Messaging Application<br/>(Matthew)"]
     end
 
 %% Connections
@@ -128,6 +132,7 @@ C1 --> C6
 C1 --> C7
 C1 --> C8
 C1 --> C9
+C1 --> C10
 
 C2 --> C2_1
 C2 --> C2_2
@@ -179,6 +184,7 @@ C7 --> C7_4
 
 C8 --> C8_1
 C8 --> C8_2
+C8 --> C8_3
 
 C9 --> C9_1
 C9_1 --> C9_1_1
@@ -186,6 +192,10 @@ C9_1 --> C9_1_2
 C9 --> C9_2
 C9_2 --> C9_2_1
 C9_2 --> C9_2_2
+
+C10 --> C10_1
+C10 --> C10_2
+C10 --> C10_3
 
 linkStyle default stroke:#5bc0eb,stroke-width:1.5px
 
@@ -200,7 +210,7 @@ linkStyle default stroke:#5bc0eb,stroke-width:1.5px
 %% Assign Classes to Nodes 
 class B1,B2,B3,B4,L,C1,C2,C2_1,C2_2,C2_3,C2_4,C2_5,C2_6,C3,C3_1,C3_2,C3_3,C3_4,C3_5,C4,C4_1,C4_2,C4_3,C4_4,C4_5,C4_6,C5,C5_1,C5_1_1,C5_1_2,C5_1_3,C5_2,C5_2_1,C5_2_2,C5_2_3,C5_3,C5_3_1,C5_3_2,C5_3_3,C5_3_4,C6,C6_1,C6_1_1,C6_1_2,C6_1_3,C6_1_4,C6_2,C6_2_1,C6_2_2,C7,C7_1,C7_2,C7_3,C7_4,C8,C8_1,P1 highPriority; 
 class B3,B4,B5,P2 medPriority;
-class B6,B7,C8_2,C9,C9_1,C9_1_1,C9_1_2,C9_2,C9_2_1,C9_2_2,P3 lowPriority;
+class B6,B7,C8_2,C8_3,C9,C9_1,C9_1_1,C9_1_2,C9_2,C9_2_1,C9_2_2,C10,C10_1,C10_2,C10_3,P3 lowPriority;
 class A publicWeb;
 
 %% Apply Style to Subgraph
