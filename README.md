@@ -84,9 +84,11 @@ flowchart LR
 
         C8["Supplier Performance Evaluation<br>(Matthew)"]
         C8_1["Basic Report<br>(Matthew)"]
-        C8_2["Advance Predictive Analysis<br>(Matthew)"]
+        C8_2["Advanced Predictive Analysis<br>(Matthew)"]
 
         C9["Financial Management<br>(林宗群)"]
+        C9_1["Manage Project Order and Payment<br>(林宗群)"]
+        C9_2["Manage Project Financial<br>(林宗群)"]
 
 
     end
@@ -139,6 +141,9 @@ C7 --> C7_4
 
 C8 --> C8_1
 C8 --> C8_2
+
+C9 --> C9_1
+C9 --> C9_2
 
 %% Priority Legend 
     subgraph Legend [Priority Legend]
