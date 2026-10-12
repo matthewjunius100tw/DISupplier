@@ -143,12 +143,26 @@ C8 --> C8_2
 %% Priority Legend 
     subgraph Legend [Priority Legend]
     direction TB
-    P1["High Priority - MVP Core"]
-    P2["Medium Priority - Phase 2"]
-    P3["Low Priority - Phase 3"]
+    P1["High Priority<br>MVP (Core Features)<br>Phase 1"]
+    P2["Medium Priority<br>Feature Development<br>Phase 2"]
+    P3["Low Priority<br>Feature Development<br>Phase 3"]
+
+    %% Non Link
+    P1~~~P2~~~P3
     end
 
 %% Assign Classes to Nodes 
 class B1,L,C1,C2,C3,C4,P1 highPriority; 
 class B2,B4,C6,C7,P2 medPriority;
 class B3,B5,B6,B7,C5,C8,P3 lowPriority;
+
+```
+#### Priority Legend:
+- 🟥 **High Priority (MVP - Phase 1)**  
+Red boxes = The core features for the minimum requirement system
+
+- 🟧 **Medium Priority (Feature Development - Phase 2)**  
+Yellow Boxes = 
+
+- 🟦 **Low Priority (Feature Development - Phase 3)**  
+Blue Boxes = 
