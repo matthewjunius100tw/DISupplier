@@ -83,7 +83,7 @@ flowchart LR
         C7_4["List MaterialS<br>(林宗群)"]
 
         C8["Supplier Performance Evaluation<br>(Matthew)"]
-        C8_1'["Basic Report<br>(Matthew)"]
+        C8_1["Basic Report<br>(Matthew)"]
         C8_2["Advance Predictive Analysis<br>(Matthew)"]
 
         C9["Financial Management<br>(林宗群)"]
