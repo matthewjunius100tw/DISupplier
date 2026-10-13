@@ -92,7 +92,7 @@ flowchart LR
         C6_1_4["🗂️<br/>Record Damaged and Rejected Items<br/>(Matthew)"]
         C6_2["🦺<br/>Manage Site Requirements<br/>(Matthew)"]
         C6_2_1["🗂️<br/>Record Material Shortage<br/>(Matthew)"]
-        C6_2_2["🗂️<br/>Record Material Usage<br/(Matthew)">]
+        C6_2_2["🗂️<br/>Record Material Usage<br/>(Matthew)"]
 
         C7["Material Management<br/>(林宗群)"]
         C7_1["🆕<br/>Add Material<br/>(林宗群)"]
