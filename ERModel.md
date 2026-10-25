@@ -1,142 +1,232 @@
-# DISupplier - 3NF Data Model (ER Diagram)
+# DISupplier 
 
-This document defines the database schema for the DISupplier Procurement and Supplier Management Platform in 3rd Normal Form (3NF). It visually distinguishes the Minimum Viable Product (MVP / Phase 1) scope from advanced features (Phase 2/3).
+## MVP - 3NF Data Model (ER Diagram)
+
+### Description:
+
+This document defines the database schema for the DISupplier Procurement and Supplier Management Platform, designed in accordance with Third Normal Form (3NF). This Entity-Relationship (ER) Diagram is specifically developed for the Minimum Viable Product (MVP / Phase 1), focusing on the core functionalities of project management, material management, supplier management, procurement, delivery tracking, and supplier performance evaluation.
 
 ```mermaid
 erDiagram
-    %% ==========================================
-    %% Entity Relationships
-    %% ==========================================
-    USERS ||--o{ PROJECTS : "manages (MVP)"
-    USERS ||--o{ PURCHASE_ORDERS : "approves (MVP)"
-    PROJECTS ||--o{ RFQS : "belongs_to (MVP)"
-    PROJECTS ||--o{ PURCHASE_ORDERS : "contains (MVP)"
+    %%Entity Relationships
     
-    SUPPLIERS ||--o{ QUOTATIONS : "submits (MVP)"
-    SUPPLIERS ||--o{ PURCHASE_ORDERS : "receives (MVP)"
-    
-    RFQS ||--o{ RFQ_ITEMS : "contains (MVP)"
-    MATERIALS ||--o{ RFQ_ITEMS : "specified_in (MVP)"
-    
-    RFQS ||--o{ QUOTATIONS : "requested_in (MVP)"
-    QUOTATIONS ||--o{ PURCHASE_ORDERS : "generated_from (MVP)"
-    
-    PURCHASE_ORDERS ||--|{ ORDER_ITEMS : "contains (MVP)"
-    MATERIALS ||--o{ ORDER_ITEMS : "ordered_in (MVP)"
-    
-    PURCHASE_ORDERS ||--o{ DELIVERIES : "has_deliveries (MVP)"
-    DELIVERIES ||--|{ DELIVERY_ITEMS : "includes (MVP)"
-    ORDER_ITEMS ||--o{ DELIVERY_ITEMS : "fulfilled_by (MVP)"
-    
-    PURCHASE_ORDERS ||--o{ PAYMENTS : "tracks_payment (Phase 3)"
-    USERS ||--o{ NOTIFICATIONS : "receives (Phase 3)"
+    %%Introduction Relationship
+    COMPANIES ||--o{ USERS: "employs"
+    COMPANIES ||--o{ PROJECTS: "manages"
+    ROLES ||--o{ USERS: "assigned_to"
 
-    %% ==========================================
-    %% Entity & 3NF Schema Definitions
-    %% ==========================================
+    %%Project Management
+    PROJECTS ||--o{ PROJECT_MEMBERS: "contains"
+    USERS ||--o{ PROJECT_MEMBERS: "assigned_to"
+    USERS ||--o{ PROJECT_ACTIVITIES: "assigned_to"
+    PROJECTS ||--o{ PROJECT_ACTIVITIES: "contains"
+    STATUSES ||--o{ PROJECTS: "defines"
+    STATUSES ||--o{ PROJECT_ACTIVITIES: "defines"
+
+    %%Material Management
+    MATERIAL_CATEGORIES ||--o{ MATERIALS: "categorizes"
+    SUPPLIERS ||--o{ SUPPLIER_MATERIALS: "offers"
+    MATERIALS ||--o{ SUPPLIER_MATERIALS: "is_offered_by"
+    MATERIALS ||--o{ PROJECT_MATERIALS_REQUIREMENTS: "specifies"
+    PROJECT_ACTIVITIES |o--o{ PROJECT_MATERIALS_REQUIREMENTS: "requires"
+    USERS |o--o{ PROJECT_MATERIALS_REQUIREMENTS: "updates"
+
+    %%Purchase Order Management
+    STATUSES ||--o{ PURCHASE_ORDERS: "defines"
+    PROJECTS ||--o{ PURCHASE_ORDERS: "orders_for"
+    SUPPLIERS ||--o{ PURCHASE_ORDERS: "receives"
+    PURCHASE_ORDERS ||--|{ PURCHASE_ORDER_ITEMS: "contains"
+    SUPPLIER_MATERIALS ||--o{ PURCHASE_ORDER_ITEMS: "purchased_as"
+    PROJECT_MATERIALS_REQUIREMENTS ||--o{ PURCHASE_ORDER_ITEMS: "fulfills"
+
+    %%Delivery Management
+    PURCHASE_ORDERS ||--|{ DELIVERIES: "fulfilled_by"
+    STATUSES ||--o{ DELIVERIES: "defines"
+    USERS |o--o{ DELIVERIES: "receives"
+    DELIVERIES ||--|{ DELIVERY_ITEMS: "contains"
+    PURCHASE_ORDER_ITEMS ||--|{ DELIVERY_ITEMS: "delivered_as"
+        
+    %%Supplier Evaluation Management
+    PURCHASE_ORDERS ||--o| SUPPLIER_EVALUATIONS: "evaluated_by"
+    USERS ||--o{ SUPPLIER_EVALUATIONS: "submits"
+
+    %% Entity Definitions
+
+    COMPANIES {
+        uuid company_id PK "Company unique identifier"
+        varchar(150) company_name  "Registered company name"
+        varchar(255) email "Company's official email address"
+        varchar(30) phone "Company's phone number"
+        text address "Company's registered address"
+        bool is_active "Indicates whether the company account is active"
+        timestamp created_at "Company registration timestamp"
+        timestamp updated_at "Last company information update timestamp"
+    }
+
     USERS {
-        int user_id PK "MVP - User ID"
-        string username "MVP - Username"
-        string email "MVP - Email Address"
-        string role "MVP - User Role (Admin/PM/SiteStaff)"
-        string status "MVP - Account Status (Active/Disabled)"
+        uuid user_id PK "User unique identifier"
+        uuid company_id FK "Company unique identifier"
+        uuid role_id FK "Assigned role"
+        varchar(100) first_name "User's first name"
+        varchar(100) last_name "User's last name"
+        varchar(255) email "Email used for login"
+        varchar(255) password "Secured password"
+        varchar(30) phone "User's phone number"
+        bool is_active "Indicates whether the account is active"
+        timestamp created_at "Account creation timestamp"
+        timestamp updated_at "Last account update timestamp"
+    }
+
+    ROLES {
+        uuid role_id PK "Role unique identifier"
+        varchar(50) role_name "Employee role's name"
+        text description "Description of the role and responsibilities"
     }
 
     PROJECTS {
-        int project_id PK "MVP - Project ID"
-        string project_name "MVP - Project Name"
-        string location "MVP - Construction Site Location"
-        date start_date "MVP - Project Start Date"
-        string status "MVP - Status (In Progress/Completed)"
-        int manager_id FK "MVP - Assigned PM (USERS.user_id)"
+        uuid project_id PK "Projet unique identifier"
+        uuid company_id FK "Company unique identifier"
+        varchar(50) project_name "Name of the construction project"
+        text description "Description of the project"
+        text location "Construction project location"
+        date start_date "Planned project start date"
+        date end_date "Planned project completion date"
+        uuid status_id FK "Current status of the project"
+        timestamp created_at "Project creation timestamp"
+        timestamp updated_at "Last project update timestamp"
+    }
+
+    PROJECT_MEMBERS {
+        uuid project_member_id PK "Unique identifier for each project assignment"
+        uuid project_id FK "Project unique identifier"
+        uuid user_id FK "User unique identifier"
+        timestamp assigned_at "Date and time the employee assigned"
+        timestamp updated_at "Date and time the project last modified"
+        uuid updated_by FK "The employee who last modified the assignment"
+    }
+
+    PROJECT_ACTIVITIES {
+        uuid activity_id PK "Activity unique identifier"
+        uuid project_id FK "Project unique identifier"
+        uuid assigned_to FK "Employee PIC"
+        uuid status_id FK "Current activity status"
+        varchar(150) activity_name "Construction activity name"
+        text description "Description of the activity"
+        date start_date "Planned activity start date"
+        date end_date "Planned activity end date"
+        timestamp created_at "Activity creation timestamp"
+        timestamp updated_at "Last activity update timestamp"
+        uuid updated_by FK "Employee who last updated the activity"
     }
 
     SUPPLIERS {
-        int supplier_id PK "MVP - Supplier ID"
-        string company_name "MVP - Company Name"
-        string contact_person "MVP - Contact Person"
-        string email "MVP - Contact Email"
-        string status "MVP - Status (Active/Suspended)"
-        string rating "Phase 2 - Supplier Rating Score"
+        uuid supplier_id PK "Supplier unique identifier"
+        varchar(150) supplier_name "Registered supplier name"
+        varchar(255) email "Supplier's official email address"
+        varchar(255) password "Secured password"
+        varchar(30) phone "Supplier's registered phone number"
+        text address "Supplier's registered address"
+        varchar(255) website "Supplier's website"
+        bool is_active "Indicates whether the supplier is active"
+        timestamp created_at "Supplier creation timestamp"
+        timestamp updated_at "Last supplier update timestamp"
     }
 
     MATERIALS {
-        int material_id PK "MVP - Material ID"
-        string material_name "MVP - Material Name"
-        string category "MVP - Material Category"
-        string unit "MVP - Unit of Measurement (Ton/Meter/Bag)"
+        uuid material_id PK "Material unique identifier"
+        uuid category_id FK "Material category unique identifier"
+        varchar(150) material_name "Name of construction material"
+        text specification "Technical specification of material"
+        varchar(30) unit "Unit of measurement"
+        bool is_active "Indicates whether the material is active"
+        timestamp created_at "Materials creation timestamp"
+        timestamp updated_at "Last material update timestamp"
     }
 
-    RFQS {
-        int rfq_id PK "MVP - RFQ ID"
-        int project_id FK "MVP - Associated Project ID"
-        date rfq_date "MVP - RFQ Date"
-        string status "MVP - Status (Draft/Sent/Closed)"
+    SUPPLIER_MATERIALS {
+        uuid supplier_material_id PK "Relationship unique identifier"
+        uuid supplier_id FK "Supplier offering the material"
+        uuid material_id FK "Material offered by supplier"
+        decimal(15,3) unit_price "Current listed price per material unit"
+        bool is_available "Indicates whether material is available"
+        timestamp created_at "Supplier material registration date"
+        timestamp updated_at "Last supplier material updated timestamp"
     }
 
-    RFQ_ITEMS {
-        int rfq_item_id PK "MVP - RFQ Item ID"
-        int rfq_id FK "MVP - Associated RFQ ID"
-        int material_id FK "MVP - Material ID"
-        int target_quantity "MVP - Target Quantity"
-    }
-
-    QUOTATIONS {
-        int quotation_id PK "MVP - Quotation ID"
-        int rfq_id FK "MVP - Corresponding RFQ ID"
-        int supplier_id FK "MVP - Supplier ID"
-        decimal quoted_total "MVP - Quoted Total Amount"
-        string status "MVP - Status (Submitted/Selected/Rejected)"
+    PROJECT_MATERIALS_REQUIREMENTS {
+        uuid requirement_id PK "Material requirement unique identifier"
+        uuid material_id FK "Required construction material"
+        uuid activity_id FK "Associated project activity"
+        decimal(15,3) required_quantity "Quantity of material required"
+        date required_date "Date when material is needed"
+        text notes "Additional material requirement details"
+        timestamp created_at "Requirement creation timestamp"
+        timestamp updated_at "Last requirement update timestamp"
+        uuid updated_by FK "Employee who last updated the requirement"
     }
 
     PURCHASE_ORDERS {
-        int po_id PK "MVP - Purchase Order ID"
-        string po_number "MVP - Purchase Order Number"
-        int project_id FK "MVP - Associated Project ID"
-        int supplier_id FK "MVP - Supplier ID"
-        int quotation_id FK "MVP - Associated Quotation ID (Nullable)"
-        int created_by FK "MVP - Created By (USERS.user_id)"
-        decimal total_amount "MVP - Total Amount"
-        string status "MVP - Status (Draft/Approved/Cancelled)"
-        date created_at "MVP - Creation Date"
+        uuid purchase_order_id PK "Purchase order unique identifiers"
+        uuid project_id FK "Project placing the order"
+        uuid supplier_id FK "Supplier receiving the order"
+        uuid created_by FK "Employee who created purchase order"
+        varchar(30) po_number "Unique purchase order reference"
+        date order_date "Purchase order issuance date"
+        date expected_delivery_date "Expected material delivery date"
+        uuid status_id FK "Current purchase order status"
+        text notes "Additional purchase order information"
+        timestamp created_at "Purchase order creation timestamp"
+        timestamp updated_at "Last purchase order update timestamp"
     }
 
-    ORDER_ITEMS {
-        int po_item_id PK "MVP - PO Item ID"
-        int po_id FK "MVP - Associated PO ID"
-        int material_id FK "MVP - Material ID"
-        int quantity "MVP - Order Quantity"
-        decimal unit_price "MVP - Agreed Unit Price"
+    PURCHASE_ORDER_ITEMS {
+        uuid po_item_id PK "Purchase order item unique identifier"
+        uuid purchase_order_id FK "Associated purchase order"
+        uuid supplier_material_id FK "Selected supplier material listing"
+        uuid requirement_id FK "Project material requirement being purchased"
+        decimal(15,3) ordered_quantity "Quantity orderded from supplier"
+        decimal(15,3) agreed_unit_price "Agreed purchase price per unit"
     }
 
     DELIVERIES {
-        int delivery_id PK "MVP - Delivery Record ID"
-        int po_id FK "MVP - Associated PO ID"
-        date delivery_date "MVP - Delivery Date"
-        string receiver_name "MVP - Receiver Name"
-        string status "MVP - Status (Received/Partial/Rejected)"
+        uuid delivery_id PK "Delivery unique identifier"
+        uuid purchase_order_id FK "Associated purchase order"
+        uuid status_id FK "Current delivery status"
+        uuid received_by FK "Employee who received delivery"
+        varchar(30) delivery_number "Unique delivery reference"
+        date scheduled_date "Scheduled material delivery date"
+        timestamp actual_arrival_at "Actual delivery timestamp"
+        timestamp received_at "Material receiving timestamp"
+        text notes "Delivery remarks or issues"
+        timestamp created_at "Delivery record creation timestamp"
+        timestamp updated_at "Last delivery update timestamp"
     }
 
     DELIVERY_ITEMS {
-        int delivery_item_id PK "MVP - Delivery Item ID"
-        int delivery_id FK "MVP - Associated Delivery ID"
-        int po_item_id FK "MVP - Corresponding PO Item ID"
-        int qty_received "MVP - Quantity Received"
-        int qty_damaged "MVP - Quantity Damaged/Rejected"
+        uuid delivery_item_id PK "Delivery item unique identifier"
+        uuid delivery_id FK "Associated delivery"
+        uuid po_item_id FK "Associated purchase order item"
+        decimal(15,3) delivered_quantity "Quantity physically delivered"
+        decimal(15,3) accepted_quantity "Quantity accepted at site"
+        decimal(15,3) rejected_quantity "Quantity rejected at site"
+        text notes "Delivery item remarks"
     }
 
-    PAYMENTS {
-        int payment_id PK "Phase 3 - Payment Record ID"
-        int po_id FK "Phase 3 - Associated PO ID"
-        decimal amount "Phase 3 - Payment Amount"
-        date payment_date "Phase 3 - Payment Date"
-        string status "Phase 3 - Status (Paid/Pending)"
+    SUPPLIER_EVALUATIONS {
+        uuid evaluation_id PK "Supplier evaluation unique identifier"
+        uuid purchase_order_id FK "Purchase order being evaluated"
+        uuid evaluated_by FK "Employee performing evaluation"
+        decimal(4,2) quality_score "Material quality evaluation score"
+        decimal(4,2) delivery_score "Delivery timeliness evaluation score"
+        decimal(4,2) service_score "Supplier service evaluation score"
+        text comments "Additional evaluation remarks"
+        timestamp evaluated_at "Evaluation submission timestamp"
     }
 
-    NOTIFICATIONS {
-        int notification_id PK "Phase 3 - Notification ID"
-        int user_id FK "Phase 3 - Recipient User ID"
-        string message "Phase 3 - Message Content"
-        timestamp sent_at "Phase 3 - Timestamp Sent"
+    STATUSES {
+        uuid status_id PK "Status unique identifier"
+        varchar(50) status_type "Project, Project Activity, Purchase Order, or Delivery"
+        varchar(30) status_name "Name of the status"
+        text description "Description of the status"
     }
 ```
