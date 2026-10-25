@@ -208,8 +208,8 @@ linkStyle default stroke:#5bc0eb,stroke-width:1.5px
     end
 
 %% Assign Classes to Nodes 
-class B1,B2,L,C1,C2,C2_1,C2_2,C2_3,C2_4,C2_5,C2_6,C3,C3_1,C3_2,C3_3,C3_4,C3_5,C4,C4_1,C4_2,C4_3,C4_4,C4_5,C4_6,C5,C5_1,C5_1_1,C5_1_2,C5_1_3,C5_2,C5_2_1,C5_2_2,C5_2_3,C5_3,C5_3_1,C5_3_2,C5_3_3,C5_3_4,C6,C6_1,C6_1_1,C6_1_2,C6_1_3,C6_1_4,C6_2,C6_2_1,C6_2_2,C7,C7_1,C7_2,C7_3,C7_4,C8,C8_1,P1 highPriority; 
-class B3,B4,B5,P2 medPriority;
+class B1,B2,L,C1,C2,C2_1,C2_2,C2_3,C2_4,C2_5,C2_6,C3,C3_1,C3_2,C3_3,C3_4,C3_5,C4,C4_1,C4_2,C4_3,C4_4,C4_5,C4_6,C5,C5_3,C5_3_1,C5_3_2,C5_3_3,C5_3_4,C6,C6_1,C6_1_1,C6_1_2,C6_1_3,C6_1_4,C6_2,C6_2_1,C6_2_2,C7,C7_1,C7_2,C7_3,C7_4,C8,C8_1,P1 highPriority; 
+class B3,B4,B5,C5,C5_1,C5_1_1,C5_1_2,C5_1_3,C5_2,C5_2_1,C5_2_2,C5_2_3,P2 medPriority;
 class B6,B7,C8_2,C8_3,C9,C9_1,C9_1_1,C9_1_2,C9_2,C9_2_1,C9_2_2,C10,C10_1,C10_2,C10_3,P3 lowPriority;
 class A publicWeb;
 
