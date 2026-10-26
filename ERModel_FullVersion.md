@@ -4,7 +4,7 @@
 
 ### Description:
 
-This document defines the Full Version database schema for the DISupplier Procurement and Supplier Management Platform in 3rd Normal Form (3NF), extending the existing procurement workflow with unified status management, notifications, financial and accounting records, supplier performance reporting, and predictive analysis.
+This document defines the database schema for the DISupplier Procurement and Supplier Management Platform, designed in accordance with Third Normal Form (3NF). This Entity-Relationship (ER) Diagram is specifically developed for the Full Version (Phase 2 and Phase 3), building upon the core functionalities established in the Minimum Viable Product (MVP / Phase 1) and extending them with advanced features, including notification management, financial and payment management, supplier performance reporting, and predictive analysis.
 
 ```mermaid
 erDiagram
@@ -55,6 +55,13 @@ erDiagram
         PURCHASE_ORDERS ||--|{ PURCHASE_ORDER_ITEMS: "contains"
         QUOTATION_ITEMS ||--o{ PURCHASE_ORDER_ITEMS: "purchased_as"
         STATUSES ||--o{ PURCHASE_ORDERS: "defines"
+
+        %%Financial Management
+        PURCHASE_ORDERS ||--o{ INVOICES: "billed_by"
+        INVOICES ||--|{ INVOICE_ITEMS: "contains"
+        PURCHASE_ORDER_ITEMS ||--o{ INVOICE_ITEMS: "billed_as"
+        INVOICES ||--o{ PAYMENTS: "settled_by"
+        USERS ||--o{ PAYMENTS: "records"
 
         %%Delivery Management
         PURCHASE_ORDERS ||--|{ DELIVERIES: "fulfilled_by"
@@ -280,11 +287,6 @@ erDiagram
             decimal(15,3) agreed_unit_price "Agreed purchase price per unit"
         }
 
-        PURCHASE_ORDER_STATUS {
-            uuid po_status_id PK "Purchase order status unique identifier"
-            varchar(30) status_name "Name of purchase order status"
-            text description "Description of purchase order status"
-        }
 
         DELIVERIES {
             uuid delivery_id PK "Delivery unique identifier"
