@@ -143,6 +143,15 @@ erDiagram
         timestamp updated_at "Last material update timestamp"
     }
 
+    MATERIAL_CATEGORIES {
+        uuid category_id PK "Material category unique identifier"
+        varchar(100) category_name "Unique material category name"
+        text description "Description of material category name"
+        bool is_active "Indicates whether category is active"
+        timestamp created_at "Category creation timestamp"
+        timestamp updated_at "Last category update timestamp"
+    }
+
     SUPPLIER_MATERIALS {
         uuid supplier_material_id PK "Relationship unique identifier"
         uuid supplier_id FK "Supplier offering the material"
