@@ -229,6 +229,12 @@ Yellow Boxes = Additional features that improve functionality and user experienc
 - 🟦 **Low Priority (Feature Development - Phase 3)**  
 Blue Boxes = Future enhancements and advanced features
 
-### 🗄️ Database Architecture &amp; ER Model Our relational database is strictly designed in **3rd Normal Form (3NF)** to eliminate data redundancy and ensure transactional integrity across procurement workflows.
+### 🗄️ Database Architecture & ER Model 
 
-👉**View the complete 3NF ER Diagram and Data Dictionary in [\`ERModel.md\`](./ERModel.md)**.
+Our relational database is strictly designed in **Third Normal Form (3NF)** to eliminate data redundancy and ensure transactional integrity across procurement workflows.
+
+- **MVP ER Diagram**: Focuses on the core database entities supporting user management, material management, supplier management, delivery tracking, and basic supplier performance evaluation  
+👉 **View the complete MVP 3NF ER Diagram and Data Dictionary in [\`ERModel_MVP.md\`](./ERModel_MVP.md)**
+
+- **Full Version ER Diagram**: Extends the MVP database with additional entities supporting financial and payment management, procurement and quotation management, notifications, supplier performance reporting, and predictive supplier analysis.   
+👉 **View the complete Full Version 3NF ER Diagram and Data Dictionary in [\`ERModel_FullVersion.md\`](./ERModel_FullVersion.md)**
