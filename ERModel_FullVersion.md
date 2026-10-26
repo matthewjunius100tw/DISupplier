@@ -406,6 +406,7 @@ erDiagram
             varchar(30) status_name "Name of the status"
             text description "Description of the status"
         }
+```
 
 
 
