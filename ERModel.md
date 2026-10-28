@@ -4,7 +4,7 @@ This document defines the 3rd Normal Form (3NF) database architecture for **DISu
 
 To maintain clarity between our initial release and future system roadmaps, the database design is structured into two dedicated files:
 
-1. 📄 **[MVP Data Model (`ERModel_MVP.md`)](./ERModel_MVP.md)**: Contains the 15 core entities required for Phase 1 MVP functionality, including company accounts, project activities, material requirements, purchase orders, delivery sign-offs, and supplier evaluations.
+1. 📄 **[MVP Data Model (`ERModel_MVP.md`)](./ERModel_MVP.md)**: Contains the 17 core entities required for Phase 1 MVP functionality, including company accounts, project activities, material requirements, purchase orders, delivery sign-offs, and supplier evaluations.
 2. 📄 **[Full Version Data Model (`ERModel_FullVersion.md`)](./ERModel_FullVersion.md)**: Expands upon the MVP model with additional entities.
 
 ---
