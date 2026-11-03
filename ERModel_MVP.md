@@ -156,7 +156,7 @@ erDiagram
         uuid supplier_material_id PK "Relationship unique identifier"
         uuid supplier_id FK "Supplier offering the material"
         uuid material_id FK "Material offered by supplier"
-        decimal(15,3) unit_price "Current listed price per material unit"
+        decimal unit_price "Current listed price per material unit"
         bool is_available "Indicates whether material is available"
         timestamp created_at "Supplier material registration date"
         timestamp updated_at "Last supplier material updated timestamp"
@@ -166,7 +166,7 @@ erDiagram
         uuid requirement_id PK "Material requirement unique identifier"
         uuid material_id FK "Required construction material"
         uuid activity_id FK "Associated project activity"
-        decimal(15,3) required_quantity "Quantity of material required"
+        decimal required_quantity "Quantity of material required"
         date required_date "Date when material is needed"
         text notes "Additional material requirement details"
         timestamp created_at "Requirement creation timestamp"
@@ -193,8 +193,8 @@ erDiagram
         uuid purchase_order_id FK "Associated purchase order"
         uuid supplier_material_id FK "Selected supplier material listing"
         uuid requirement_id FK "Project material requirement being purchased"
-        decimal(15,3) ordered_quantity "Quantity orderded from supplier"
-        decimal(15,3) agreed_unit_price "Agreed purchase price per unit"
+        decimal ordered_quantity "Quantity orderded from supplier"
+        decimal agreed_unit_price "Agreed purchase price per unit"
     }
 
     DELIVERIES {
@@ -215,9 +215,9 @@ erDiagram
         uuid delivery_item_id PK "Delivery item unique identifier"
         uuid delivery_id FK "Associated delivery"
         uuid po_item_id FK "Associated purchase order item"
-        decimal(15,3) delivered_quantity "Quantity physically delivered"
-        decimal(15,3) accepted_quantity "Quantity accepted at site"
-        decimal(15,3) rejected_quantity "Quantity rejected at site"
+        decimal delivered_quantity "Quantity physically delivered"
+        decimal accepted_quantity "Quantity accepted at site"
+        decimal rejected_quantity "Quantity rejected at site"
         text notes "Delivery item remarks"
     }
 
@@ -225,9 +225,9 @@ erDiagram
         uuid evaluation_id PK "Supplier evaluation unique identifier"
         uuid purchase_order_id FK "Purchase order being evaluated"
         uuid evaluated_by FK "Employee performing evaluation"
-        decimal(4,2) quality_score "Material quality evaluation score"
-        decimal(4,2) delivery_score "Delivery timeliness evaluation score"
-        decimal(4,2) service_score "Supplier service evaluation score"
+        decimal quality_score "Material quality evaluation score"
+        decimal delivery_score "Delivery timeliness evaluation score"
+        decimal service_score "Supplier service evaluation score"
         text comments "Additional evaluation remarks"
         timestamp evaluated_at "Evaluation submission timestamp"
     }

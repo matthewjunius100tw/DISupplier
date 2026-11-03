@@ -232,7 +232,7 @@ erDiagram
             uuid rfq_item_id PK "RFQ item unique identifier"
             uuid rfq_id FK "Associated request for quotation"
             uuid requirement_id FK "Associated project material requirement"
-            decimal(15,3) requested_quantity "Quantity requested from supllier"
+            decimal requested_quantity "Quantity requested from supllier"
             text notes "Additional RFQ item information"
         }
 
@@ -260,8 +260,8 @@ erDiagram
             uuid quotation_item_id PK "Quotation item unique identifier"
             uuid quotation_id FK "Associated quotation"
             uuid rfq_item_id FK "Corresponding requested material"
-            decimal(15,3) quoted_quantity "Quantity offered by supplier"
-            decimal(15,3) unit_price "Quoted price per material unit"
+            decimal quoted_quantity "Quantity offered by supplier"
+            decimal unit_price "Quoted price per material unit"
             text notes "Additional quotation item details"
         }
 
@@ -283,8 +283,8 @@ erDiagram
             uuid po_item_id PK "Purchase order item unique identifier"
             uuid purchase_order_id FK "Associated purchase order"
             uuid quotation_item_id FK "Source quotation item"
-            decimal(15,3) ordered_quantity "Quantity orderded from supplier"
-            decimal(15,3) agreed_unit_price "Agreed purchase price per unit"
+            decimal ordered_quantity "Quantity orderded from supplier"
+            decimal agreed_unit_price "Agreed purchase price per unit"
         }
 
 
@@ -306,9 +306,9 @@ erDiagram
             uuid delivery_item_id PK "Delivery item unique identifier"
             uuid delivery_id FK "Associated delivery"
             uuid po_item_id FK "Associated purchase order item"
-            decimal(15,3) delivered_quantity "Quantity physically delivered"
-            decimal(15,3) accepted_quantity "Quantity accepted at site"
-            decimal(15,3) rejected_quantity "Quantity rejected at site"
+            decimal delivered_quantity "Quantity physically delivered"
+            decimal accepted_quantity "Quantity accepted at site"
+            decimal rejected_quantity "Quantity rejected at site"
             text notes "Delivery item remarks"
         }
 
@@ -316,9 +316,9 @@ erDiagram
             uuid evaluation_id PK "Supplier evaluation unique identifier"
             uuid purchase_order_id FK "Purchase order being evaluated"
             uuid evaluated_by FK "Employee performing evaluation"
-            decimal(4,2) quality_score "Material quality evaluation score"
-            decimal(4,2) delivery_score "Delivery timeliness evaluation score"
-            decimal(4,2) service_score "Supplier service evaluation score"
+            decimal quality_score "Material quality evaluation score"
+            decimal delivery_score "Delivery timeliness evaluation score"
+            decimal service_score "Supplier service evaluation score"
             text comments "Additional evaluation remarks"
             timestamp evaluated_at "Evaluation submission timestamp"
         }
@@ -331,11 +331,11 @@ erDiagram
             date period_start "Beginning of reporting period"
             date period_end "End of reporting period"
             int evaluated_orders_count "Number of orders used in report"
-            decimal(4,2) average_quality_score "Average evaluated material quality score"
-            decimal(4,2) average_delivery_score "Average evaluated delivery score"
-            decimal(4,2) average_service_score "Average evaluated service score"
-            decimal(4,2) overall_score "Composite supplier performance score"
-            decimal(5,2) on_time_delivery_rate "On time delivery percentage"
+            decimal average_quality_score "Average evaluated material quality score"
+            decimal average_delivery_score "Average evaluated delivery score"
+            decimal average_service_score "Average evaluated service score"
+            decimal overall_score "Composite supplier performance score"
+            decimal on_time_delivery_rate "On time delivery percentage"
             timestamp generated_at "Report generation timestamp"
         }
 
@@ -343,7 +343,7 @@ erDiagram
             uuid prediction_id PK "Supplier performance prediction identifier"
             uuid report_id FK "Source supplier performance report"
             varchar(50) prediction_target "Metric being predicted"
-            decimal(10,4) predicted_value "Predicted value for selected metric"
+            decimal predicted_value "Predicted value for selected metric"
             varchar(30) prediction_unit "Unit of the predicted metric"
             decimal(5,4) confidence_score "Prediction confidence if available"
             date forecast_end_date "Forecast period ending date"
@@ -380,8 +380,8 @@ erDiagram
             uuid invoice_item_id PK "Invoice item unique identifier"
             uuid invoice_id FK "Associated supplier invoice"
             uuid po_item_id FK "Associated purchase order item"
-            decimal(15,3) billed_quantity "Quantity charged by supplier"
-            decimal(15,2) unit_price "Invoiced unit price"
+            decimal billed_quantity "Quantity charged by supplier"
+            decimal unit_price "Invoiced unit price"
             text notes "Additional invoice item remarks"
         }
 
@@ -392,7 +392,7 @@ erDiagram
             uuid status_id FK "Current payment status"
             varchar(50) payment_number "Unique payment reference number"
             date payment_date "Date payment was made"
-            decimal(15,2) amount "Amount paid toward invoice"
+            decimal amount "Amount paid toward invoice"
             varchar(30) payment_method "Method used to make payment"
             varchar(100) transaction_reference "Bank or payment transaction reference"
             text notes "Additional payment remarks"
