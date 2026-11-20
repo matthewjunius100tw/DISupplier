@@ -1,0 +1,25 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+
+# Database storage
+mysql_data/
+
+# Raw datasets
+data/
+
+# Database backups
+backups/
+
+# Temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
