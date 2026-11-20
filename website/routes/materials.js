@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-    randomUUID
+    randomInt
 } = require('node:crypto');
 
 const router = express.Router();
@@ -243,9 +243,9 @@ router.post('/', (req, res) => {
         return sendError(res, 400, error);
     }
 
-    // material_id is VARCHAR(8): "M" + 7 random characters
-    const material_id =
-        'M' + randomUUID().replace(/-/g, '').slice(0, 7).toUpperCase();
+    // material_id is VARCHAR(8). The original data uses 8-digit numbers
+    // (e.g. 85822412), so new materials also get a random 8-digit number.
+    const material_id = String(randomInt(10000000, 100000000));
 
     const SQL = `
         INSERT INTO materials
@@ -266,6 +266,11 @@ router.post('/', (req, res) => {
 
             if (err) {
                 console.error('Error adding material:', err);
+
+                // Very unlikely: the random ID is already used
+                if (err.code === 'ER_DUP_ENTRY') {
+                    return sendError(res, 409, 'Generated material ID already exists. Please click Add again.');
+                }
 
                 if (err.code === 'ER_NO_REFERENCED_ROW_2') {
                     return sendError(res, 400, 'The selected category does not exist.');
