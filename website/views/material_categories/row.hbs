@@ -1,0 +1,73 @@
+<tr id="category-{{category_id}}" class="align-middle">
+
+    <td>{{category_name}}</td>
+
+    <td>
+        {{#if description}}
+        {{description}}
+        {{else}}
+        -
+        {{/if}}
+    </td>
+
+    <td>
+        <span class="badge bg-secondary">
+            {{materials_count}}
+        </span>
+    </td>
+
+
+    <td>
+        <button type="button" class="btn btn-sm {{#if is_active}}btn-primary{{else}}btn-secondary{{/if}}"
+            hx-put="/material-categories/{{category_id}}/status" hx-target="closest tr" hx-swap="outerHTML"
+            hx-confirm="Are you sure you want to change this category's status?">
+
+            {{#if is_active}}
+            <i class="bi bi-check-circle me-1"></i>
+            Active
+            {{else}}
+            <i class="bi bi-dash-circle me-1"></i>
+            Inactive
+            {{/if}}
+
+        </button>
+    </td>
+
+    <td>
+        <!-- Edit Category -->
+        <button type="button" class="btn btn-primary btn-sm" hx-get="/material-categories/{{category_id}}/edit"
+            hx-target="closest tr" hx-swap="outerHTML">
+
+            <i class="bi bi-pencil-square me-1"></i>
+            Edit
+        </button>
+
+
+        <!-- Delete Material Category -->
+        {{#if materials_count}}
+
+        <!-- Deletion disabled: category contains materials -->
+        <button type="button" class="btn btn-secondary btn-sm ms-2" disabled
+            title="Cannot delete: this category contains materials. Change its status to Inactive instead.">
+
+            <i class="bi bi-lock me-1"></i>
+            Delete
+        </button>
+
+        {{else}}
+
+        <!-- Deletion allowed: no related materials -->
+        <button type="button" class="btn btn-danger btn-sm ms-2" hx-delete="/material-categories/{{category_id}}"
+            hx-target="closest tr" hx-swap="outerHTML"
+            hx-confirm="This category has no related materials. Are you sure you want to permanently delete it?">
+
+            <i class="bi bi-trash3 me-1"></i>
+            Delete
+        </button>
+
+        {{/if}}
+
+    </td>
+
+
+</tr>

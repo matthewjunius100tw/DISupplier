@@ -1,0 +1,45 @@
+<tr class="align-middle">
+
+    <td colspan="5">
+
+        <form hx-put="/material-categories/{{category_id}}" hx-target="closest tr" hx-swap="outerHTML">
+
+            <div class="row g-2 align-items-end">
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Category Name
+                    </label>
+
+                    <input type="text" name="category_name" class="form-control" value="{{category_name}}"
+                        maxlength="100" required>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label">
+                        Description
+                    </label>
+
+                    <input type="text" name="description" class="form-control" value="{{description}}">
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-check-lg"></i>
+                        Save
+                    </button>
+
+                    <button type="button" class="btn btn-secondary btn-sm"
+                        hx-get="/material-categories/{{category_id}}/row" hx-target="closest tr" hx-swap="outerHTML">
+                        <i class="bi bi-x-lg"></i>
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+
+    </td>
+
+</tr>
