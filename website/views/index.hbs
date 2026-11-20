@@ -36,9 +36,12 @@
         </div>
     </header>
 
+    <!-- Main Navigation Bar -->
+    {{> navbar}}
 
     <!-- Main Content -->
-    <main id="main" class="container">
+
+    <main id="main" class="container" {{#if where}} hx-get="{{where}}" hx-trigger="load" {{/if}}>
         <section class="home-content">
             <h2>Welcome to DISupplier</h2>
             <p>

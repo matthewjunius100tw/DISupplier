@@ -1,4 +1,7 @@
 const express = require('express');
+const mysql = require('mysql2');
+const config = require('./config');
+
 
 const app = express();
 
@@ -14,6 +17,18 @@ app.engine('hbs', engine({
 app.set('view engine', 'hbs');
 app.set('views', './views');
 
+// DISupplier MySQL Database Connection
+const connection = mysql.createConnection(config.db);
+
+connection.connect((err) => {
+    if (err) {
+        console.error('Error connecting to DISupplier database:', err.message);
+    } else {
+        console.log('Successfully connected to DISupplier database!');
+    }
+});
+
+
 // Middleware for processing form data
 app.use(express.urlencoded({ extended: true }));
 
@@ -26,10 +41,45 @@ app.use(express.static('node_modules/bootstrap-icons/font'));
 
 // Homepage route
 app.get('/', (req, res) => {
-    res.render('index', {
-        title: 'DISupplier - Procurement Management System'
-    });
+    if (req.get('HX-Request')) {
+        res.send(`
+            <section class="home-content">
+                <h2>Welcome to DISupplier</h2>
+                <p>
+                    Streamlining construction procurement,
+                    material management, and supplier collaboration.
+                </p>
+                <i class="bi bi-buildings"
+                   style="font-size: 70px; color: var(--di-blue);">
+                </i>
+            </section>
+        `);
+    } else {
+        res.render('index', {
+            title: 'DISupplier - Procurement Management System'
+        });
+    }
 });
+
+app.get(/.*/, (req, res, next) => {
+    if (req.get('HX-Request')) {
+        next();
+    } else {
+        res.render('index', {
+            title: 'DISupplier - Procurement Management System',
+            where: req.url
+        });
+    }
+});
+
+const materialCategories = require('./routes/material_categories');
+
+// Share the database connection with the router
+materialCategories.connection = connection;
+
+// Register Material Categories routes
+app.use('/material-categories', materialCategories);
+
 
 // Start web server
 app.listen(80, () => {
