@@ -1,0 +1,121 @@
+<div class="mt-4">
+
+    <h2 class="mb-3">
+        <i class="bi bi-boxes me-2"></i>
+        Material List
+    </h2>
+
+    <!-- Error messages from the server (validation, delete warnings) -->
+    <div id="material-message"></div>
+
+    <!-- Add Material -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add New Material
+        </div>
+
+        <div class="card-body">
+
+            <form hx-post="/materials" hx-target="#material-table-body" hx-swap="afterbegin"
+                hx-on::after:request="if (ctx.response.status < 400) { this.reset(); document.querySelector('#material-message').innerHTML = ''; }">
+
+                <div class="row g-3">
+
+                    <!-- Category (only active categories can receive new materials) -->
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <select name="category_id" class="form-select" required>
+                            <option value="">Select a category</option>
+                            {{#each categories}}
+                            {{#if is_active}}
+                            <option value="{{category_id}}">{{category_name}}</option>
+                            {{/if}}
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <!-- Material Name -->
+                    <div class="col-md-3">
+                        <label class="form-label">Material Name</label>
+                        <input type="text" name="material_name" class="form-control" maxlength="150"
+                            placeholder="Enter material name" required>
+                    </div>
+
+                    <!-- Unit -->
+                    <div class="col-md-2">
+                        <label class="form-label">Unit</label>
+                        <input type="text" name="unit" class="form-control" maxlength="30"
+                            placeholder="e.g. m3, kg" required>
+                    </div>
+
+                    <!-- Specification -->
+                    <div class="col-md-2">
+                        <label class="form-label">Specification</label>
+                        <input type="text" name="specification" class="form-control" placeholder="Optional">
+                    </div>
+
+                    <!-- Add Button -->
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Add
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- Filter (master-detail) and keyword search: only the table body is reloaded -->
+    <div class="row g-2 mb-3">
+
+        <div class="col-md-4">
+            <select id="material-category-filter" name="category_id" class="form-select"
+                hx-get="/materials/list" hx-trigger="change" hx-target="#material-table-body"
+                hx-include="#material-search">
+                <option value="">All categories</option>
+                {{#each categories}}
+                <option value="{{category_id}}">{{category_name}}{{#unless is_active}} (inactive){{/unless}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="col-md-8">
+            <input id="material-search" type="search" name="q" class="form-control"
+                placeholder="Search by material name or ID..."
+                hx-get="/materials/list" hx-trigger="input delay:300ms" hx-target="#material-table-body"
+                hx-include="#material-category-filter">
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-light">
+                <tr>
+                    <th>Material ID</th>
+                    <th>Material Name</th>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th>Specification</th>
+                    <th>Used In</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="material-table-body">
+                {{> materials/rows}}
+            </tbody>
+
+        </table>
+    </div>
+
+</div>

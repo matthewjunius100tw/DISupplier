@@ -1,0 +1,19 @@
+{{#each data}}
+{{> materials/row}}
+{{else}}
+<tr>
+    <td colspan="8" class="text-center text-muted py-4">
+        No materials found.
+    </td>
+</tr>
+{{/each}}
+
+{{#if nextUrl}}
+<!-- Infinite scroll: when this row scrolls into view, it is replaced by the next page -->
+<tr hx-get="{{nextUrl}}" hx-trigger="revealed" hx-swap="outerHTML">
+    <td colspan="8" class="text-center text-muted py-3">
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        Loading more materials...
+    </td>
+</tr>
+{{/if}}
