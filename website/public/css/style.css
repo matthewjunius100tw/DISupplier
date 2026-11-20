@@ -1,0 +1,117 @@
+:root {
+    --di-navy: #102A43;
+    --di-blue: #1769AA;
+    --di-light-blue: #DCEEFF;
+    --di-cyan: #00AEEF;
+    --di-charcoal: #252A30;
+    --di-grey: #555E68;
+    --di-light-grey: #EDF1F5;
+    --di-white: #FFFFFF;
+}
+
+body {
+    font-family: Aptos, "Segoe UI", Arial, sans-serif;
+    background-color: var(--di-light-grey);
+    color: var(--di-charcoal);
+    margin: 0;
+}
+
+.site-header {
+    background: var(--di-white);
+    border-bottom: 3px solid var(--di-blue);
+    padding: 20px 5%;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.header-left {
+    text-align: left;
+}
+
+.header-left h1 {
+    color: var(--di-navy);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.disupplier-logo {
+    width: 150px;
+    max-width: 100%;
+    height: auto;
+}
+
+.site-subtitle {
+    color: var(--di-grey);
+    margin: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.home-content {
+    background: var(--di-white);
+    border-radius: 12px;
+    padding: 55px 24px;
+    margin: 35px auto;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(16, 42, 67, 0.08);
+}
+
+.home-content h2 {
+    color: var(--di-navy);
+    font-weight: 600;
+}
+
+.home-content p {
+    color: var(--di-grey);
+}
+
+.site-footer {
+    background: #102A43;
+    color: var(--di-white);
+    padding: 28px 16px;
+    text-align: center;
+    border-top: 3px solid var(--di-white);
+}
+
+.company-logo {
+    width: 150px;
+    max-width: 100%;
+    height: auto;
+    margin: 12px auto;
+}
+
+.footer-caption {
+    font-size: 0.85rem;
+    color: var(--di-white);
+}
+
+
+.btn-primary {
+    background-color: var(--di-blue);
+    border-color: var(--di-blue);
+}
+
+/* Responsive layout for mobile */
+@media (max-width: 576px) {
+    .header-container {
+        flex-direction: column-reverse;
+        gap: 15px;
+    }
+
+    .header-left {
+        text-align: center;
+    }
+
+    .header-right {
+        justify-content: center;
+    }
+}
