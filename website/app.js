@@ -100,6 +100,14 @@ projects.connection = connection;
 // Register Projects routes
 app.use('/projects', projects);
 
+const suppliers = require('./routes/suppliers');
+
+// Share the database connection with the supplier router
+suppliers.connection = connection;
+
+// Register Supplier Management routes
+app.use('/suppliers', suppliers);
+
 
 // Start web server
 app.listen(80, () => {
