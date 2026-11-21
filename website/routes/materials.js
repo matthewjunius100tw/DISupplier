@@ -554,7 +554,8 @@ router.delete('/:id', (req, res) => {
                     return sendError(res, 404, 'Material not found.');
                 }
 
-                // Step 4: Empty response removes the row from the table
+                // Step 4: Notify HTMX to refresh material results after deletion
+                res.set('HX-Trigger', 'material-deleted');
                 res.send('');
             });
         }
