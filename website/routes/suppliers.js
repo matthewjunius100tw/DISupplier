@@ -132,43 +132,25 @@ function findSuppliers(query, callback) {
                 return callback(err);
             }
 
-            // Compact pagination with ellipses
-            const pageNumbers = new Set([
-                1,
-                totalPages,
-                page - 1,
-                page,
-                page + 1
-            ]);
+            // Display up to 5 consecutive page numbers
+            const visibleCount = Math.min(5, totalPages);
 
-            const visiblePages = [...pageNumbers]
-                .filter(n => n >= 1 && n <= totalPages)
-                .sort((a, b) => a - b);
+            const startPage = Math.max(
+                1,
+                Math.min(
+                    page - 2,
+                    totalPages - visibleCount + 1
+                )
+            );
 
             const pages = [];
 
-            visiblePages.forEach((number, index) => {
-
-                if (index > 0) {
-                    const gap = number - visiblePages[index - 1];
-
-                    if (gap === 2) {
-                        pages.push({
-                            number: number - 1,
-                            active: false
-                        });
-                    } else if (gap > 2) {
-                        pages.push({
-                            ellipsis: true
-                        });
-                    }
-                }
-
+            for (let number = startPage; number < startPage + visibleCount; number++) {
                 pages.push({
                     number: number,
                     active: number === page
                 });
-            });
+            }
 
             callback(null, {
                 data: rows,
@@ -185,6 +167,8 @@ function findSuppliers(query, callback) {
                 hasNext: page < totalPages,
                 previousPage: page - 1,
                 nextPage: page + 1,
+                firstPage: 1,
+                lastPage: totalPages,
                 startRecord: total === 0 ? 0 : offset + 1,
                 endRecord: Math.min(offset + pageSize, total)
             });

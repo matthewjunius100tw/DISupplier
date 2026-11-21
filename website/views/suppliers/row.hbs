@@ -30,14 +30,14 @@
         </td>
 
         <!-- Related Materials and Purchase Orders -->
-        <td>
+        <td class="text-center">
             <span class="badge bg-secondary">
                 {{usage_count}}
             </span>
         </td>
 
         <!-- Status -->
-        <td class="text-nowrap">
+        <td class="text-center text-nowrap">
 
             <button type="button" class="btn btn-sm {{#if is_active}}btn-primary{{else}}btn-secondary{{/if}}"
                 hx-put="/suppliers/{{supplier_id}}/status" hx-target="closest tbody" hx-swap="outerHTML"
@@ -60,8 +60,8 @@
         </td>
 
         <!-- Actions -->
-        <td class="text-nowrap">
-
+        <td class="text-center text-nowrap">
+            
             <!-- Edit -->
             <button type="button" class="btn btn-primary btn-sm" hx-get="/suppliers/{{supplier_id}}/edit"
                 hx-target="closest tbody" hx-swap="outerHTML">
