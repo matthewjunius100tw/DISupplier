@@ -8,6 +8,88 @@
     <!-- Error messages from the server (validation, delete warnings) -->
     <div id="project-message"></div>
 
+    <!-- Add Project -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add New Project
+        </div>
+
+        <div class="card-body">
+
+            <form hx-post="/projects" hx-target="#project-table-body" hx-swap="afterbegin"
+                hx-on::after:request="if (ctx.response.status < 400) { this.reset(); document.querySelector('#project-message').innerHTML = ''; }">
+
+                <div class="row g-3">
+
+                    <!-- Project Name -->
+                    <div class="col-md-4">
+                        <label class="form-label">Project Name</label>
+                        <input type="text" name="project_name" class="form-control" maxlength="50"
+                            placeholder="Enter project name" required>
+                    </div>
+
+                    <!-- Company -->
+                    <div class="col-md-4">
+                        <label class="form-label">Company</label>
+                        <select name="company_id" class="form-select" required>
+                            <option value="">Select a company</option>
+                            {{#each companies}}
+                            <option value="{{company_id}}">{{company_name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <!-- Status (the first option, Planned, is selected by default) -->
+                    <div class="col-md-4">
+                        <label class="form-label">Status</label>
+                        <select name="status_id" class="form-select" required>
+                            {{#each statuses}}
+                            <option value="{{status_id}}">{{status_name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-md-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" name="location" class="form-control" placeholder="e.g. Taipei, Taiwan">
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="col-md-2">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" name="start_date" class="form-control">
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="col-md-2">
+                        <label class="form-label">End Date</label>
+                        <input type="date" name="end_date" class="form-control">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-md-3">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="description" class="form-control" placeholder="Optional">
+                    </div>
+
+                    <!-- Add Button -->
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Add
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
     <!-- Filters and keyword search: only the table body is reloaded -->
     <div class="row g-2 mb-3">
 
