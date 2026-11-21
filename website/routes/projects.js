@@ -329,4 +329,96 @@ router.post('/', (req, res) => {
     );
 });
 
+
+// READ: One project as an edit form or as a normal row (Cancel button)
+router.get('/:id/:view', (req, res) => {
+
+    if (req.params.view === 'row') {
+        return renderRow(res, req.params.id);
+    }
+
+    if (req.params.view !== 'edit') {
+        return res.status(404).send('Page not found.');
+    }
+
+    queryProjects(' WHERE p.project_id = ?', [req.params.id], (err, data) => {
+
+        if (err || data.length === 0) {
+            return sendError(res, 404, 'Project not found.');
+        }
+
+        loadOptions((err, options) => {
+
+            if (err) {
+                return sendError(res, 500, 'Unable to retrieve companies or statuses.');
+            }
+
+            const project = data[0];
+
+            // Mark the project's current company and status as selected
+            project.companies = options.companies.map((c) => ({
+                ...c,
+                selected: c.company_id === project.company_id
+            }));
+
+            project.statuses = options.statuses.map((s) => ({
+                ...s,
+                selected: s.status_id === project.status_id
+            }));
+
+            res.render('projects/edit', project);
+        });
+    });
+});
+
+
+// UPDATE: Edit project details and status
+router.put('/:id', (req, res) => {
+
+    const project = readProjectForm(req.body);
+
+    const error = validateProject(project);
+    if (error) {
+        return sendError(res, 400, error);
+    }
+
+    const SQL = `
+        UPDATE projects
+        SET company_id = ?,
+            project_name = ?,
+            description = ?,
+            location = ?,
+            start_date = ?,
+            end_date = ?,
+            status_id = ?
+        WHERE project_id = ?
+    `;
+
+    router.connection.execute(
+        SQL,
+        [
+            project.company_id,
+            project.project_name,
+            project.description || null,
+            project.location || null,
+            project.start_date || null,
+            project.end_date || null,
+            project.status_id,
+            req.params.id
+        ],
+        (err, result) => {
+
+            if (err) {
+                return sendDatabaseError(res, err, 'update');
+            }
+
+            if (result.affectedRows === 0) {
+                return sendError(res, 404, 'Project not found.');
+            }
+
+            renderRow(res, req.params.id);
+        }
+    );
+});
+
 module.exports = router;
