@@ -1,23 +1,31 @@
 <tr id="category-{{category_id}}" class="align-middle">
 
-    <td>{{category_name}}</td>
-
-    <td>
-        {{#if description}}
-        {{description}}
-        {{else}}
-        -
-        {{/if}}
+    <!-- Category Name -->
+    <td style="overflow-wrap: anywhere; white-space: normal;">
+        {{category_name}}
     </td>
 
-    <td>
+    <!-- Description -->
+    <td class="text-start" style="overflow-wrap: anywhere; white-space: normal;">
+
+        {{#if description}}
+        <span style="white-space: pre-line;">{{description}}</span>
+        {{else}}
+        <span>-</span>
+        {{/if}}
+
+    </td>
+
+    <!-- Materials Count -->
+    <td class="text-center">
         <span class="badge bg-secondary">
             {{materials_count}}
         </span>
     </td>
 
+    <!-- Status -->
+    <td class="text-center text-nowrap">
 
-    <td>
         <button type="button" class="btn btn-sm {{#if is_active}}btn-primary{{else}}btn-secondary{{/if}}"
             hx-put="/material-categories/{{category_id}}/status" hx-target="closest tr" hx-swap="outerHTML"
             hx-confirm="Are you sure you want to change this category's status?">
@@ -31,43 +39,46 @@
             {{/if}}
 
         </button>
-    </td>
-
-    <td>
-        <!-- Edit Category -->
-        <button type="button" class="btn btn-primary btn-sm" hx-get="/material-categories/{{category_id}}/edit"
-            hx-target="closest tr" hx-swap="outerHTML">
-
-            <i class="bi bi-pencil-square me-1"></i>
-            Edit
-        </button>
-
-
-        <!-- Delete Material Category -->
-        {{#if materials_count}}
-
-        <!-- Deletion disabled: category contains materials -->
-        <button type="button" class="btn btn-secondary btn-sm ms-2" disabled
-            title="Cannot delete: this category contains materials. Change its status to Inactive instead.">
-
-            <i class="bi bi-lock me-1"></i>
-            Delete
-        </button>
-
-        {{else}}
-
-        <!-- Deletion allowed: no related materials -->
-        <button type="button" class="btn btn-danger btn-sm ms-2" hx-delete="/material-categories/{{category_id}}"
-            hx-target="closest tr" hx-swap="outerHTML"
-            hx-confirm="This category has no related materials. Are you sure you want to permanently delete it?">
-
-            <i class="bi bi-trash3 me-1"></i>
-            Delete
-        </button>
-
-        {{/if}}
 
     </td>
 
+    <!-- Actions -->
+    <td class="text-center">
+
+        <div class="d-flex flex-column align-items-center gap-2">
+
+            <!-- Edit Category -->
+            <button type="button" class="btn btn-primary btn-sm" style="width: 90px;"
+                hx-get="/material-categories/{{category_id}}/edit" hx-target="closest tr" hx-swap="outerHTML">
+
+                <i class="bi bi-pencil-square me-1"></i>
+                Edit
+            </button>
+
+            <!-- Delete Category -->
+            {{#if materials_count}}
+
+            <button type="button" class="btn btn-secondary btn-sm" style="width: 90px;" disabled
+                title="Cannot delete: this category contains materials. Change its status to Inactive instead.">
+
+                <i class="bi bi-lock me-1"></i>
+                Delete
+            </button>
+
+            {{else}}
+
+            <button type="button" class="btn btn-danger btn-sm" style="width: 90px;"
+                hx-delete="/material-categories/{{category_id}}" hx-target="closest tr" hx-swap="outerHTML"
+                hx-confirm="This category has no related materials. Are you sure you want to permanently delete it?">
+
+                <i class="bi bi-trash3 me-1"></i>
+                Delete
+            </button>
+
+            {{/if}}
+
+        </div>
+
+    </td>
 
 </tr>
