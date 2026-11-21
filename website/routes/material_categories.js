@@ -5,28 +5,128 @@ const { randomUUID } = require('node:crypto');
 const router = express.Router();
 
 
-// READ: Retrieve all material categories with material counts
-router.get('/', (req, res) => {
+const PAGE_SIZE_OPTIONS = [25, 50, 100];
+const DEFAULT_PAGE_SIZE = 25;
 
-    const SQL = `
-        SELECT
-            mc.category_id,
-            mc.category_name,
-            mc.description,
-            mc.is_active,
-            COUNT(m.material_id) AS materials_count
-        FROM material_categories mc
-        LEFT JOIN materials m
-            ON mc.category_id = m.category_id
-        GROUP BY
-            mc.category_id,
-            mc.category_name,
-            mc.description,
-            mc.is_active
-        ORDER BY mc.category_name
+// Helper: retrieve paginated material categories
+function findCategories(query, callback) {
+
+    const requestedSize = Number(query.page_size);
+
+    const pageSize = PAGE_SIZE_OPTIONS.includes(requestedSize)
+        ? requestedSize
+        : DEFAULT_PAGE_SIZE;
+
+    const requestedPage = Math.max(
+        parseInt(query.page, 10) || 1,
+        1
+    );
+
+    const countSQL = `
+        SELECT COUNT(*) AS total
+        FROM material_categories
     `;
 
-    router.connection.query(SQL, (err, data) => {
+    router.connection.query(countSQL, (err, countRows) => {
+
+        if (err) {
+            return callback(err);
+        }
+
+        const total = Number(countRows[0].total);
+
+        const totalPages = Math.max(
+            Math.ceil(total / pageSize),
+            1
+        );
+
+        const page = Math.min(requestedPage, totalPages);
+        const offset = (page - 1) * pageSize;
+
+        const SQL = `
+            SELECT
+                mc.category_id,
+                mc.category_name,
+                mc.description,
+                mc.is_active,
+                COUNT(m.material_id) AS materials_count
+            FROM material_categories mc
+            LEFT JOIN materials m
+                ON mc.category_id = m.category_id
+            GROUP BY
+                mc.category_id,
+                mc.category_name,
+                mc.description,
+                mc.is_active
+            ORDER BY mc.category_name, mc.category_id
+            LIMIT ${pageSize} OFFSET ${offset}
+        `;
+
+        router.connection.query(SQL, (err, rows) => {
+
+            if (err) {
+                return callback(err);
+            }
+
+            rows.forEach(row => {
+                row.materials_count = Number(row.materials_count);
+            });
+
+            // Display up to 5 consecutive pages
+            const visibleCount = Math.min(5, totalPages);
+
+            const startPage = Math.max(
+                1,
+                Math.min(
+                    page - 2,
+                    totalPages - visibleCount + 1
+                )
+            );
+
+            const pages = [];
+
+            for (
+                let number = startPage;
+                number < startPage + visibleCount;
+                number++
+            ) {
+                pages.push({
+                    number: number,
+                    active: number === page
+                });
+            }
+
+            callback(null, {
+                data: rows,
+                total: total,
+                page: page,
+                totalPages: totalPages,
+                pageSize: pageSize,
+                pageSizeOptions: PAGE_SIZE_OPTIONS.map(size => ({
+                    value: size,
+                    selected: size === pageSize
+                })),
+                pages: pages,
+                hasPrevious: page > 1,
+                hasNext: page < totalPages,
+                previousPage: page - 1,
+                nextPage: page + 1,
+                firstPage: 1,
+                lastPage: totalPages,
+                startRecord: total === 0 ? 0 : offset + 1,
+                endRecord: Math.min(offset + pageSize, total)
+            });
+        });
+    });
+}
+
+
+// READ: Retrieve all material categories with material counts
+
+// READ: Material Categories main page
+router.get('/', (req, res) => {
+
+    findCategories(req.query, (err, result) => {
 
         if (err) {
             console.error('Error fetching material categories:', err);
@@ -35,13 +135,26 @@ router.get('/', (req, res) => {
             );
         }
 
-        res.render('material_categories/index', {
-            data: data
-        });
-
+        res.render('material_categories/index', result);
     });
-
 });
+
+// READ: Paginated category results
+router.get('/list', (req, res) => {
+
+    findCategories(req.query, (err, result) => {
+
+        if (err) {
+            console.error('Error fetching material categories:', err);
+            return res.status(500).send(
+                'Unable to retrieve material categories.'
+            );
+        }
+
+        res.render('material_categories/results', result);
+    });
+});
+
 
 
 // CREATE: Add a new material category
@@ -92,6 +205,7 @@ router.post('/', (req, res) => {
             }
 
             // Return the newly created table row
+            res.set('HX-Trigger', 'category-added');
             res.render('material_categories/row', {
                 category_id: category_id,
                 category_name: category_name,
@@ -386,7 +500,9 @@ router.delete('/:id', (req, res) => {
                     }
 
                     // Step 4: Remove the category row from the UI
+                    res.set('HX-Trigger', 'category-deleted');
                     res.send('');
+
                 }
             );
         }
