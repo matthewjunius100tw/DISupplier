@@ -69,44 +69,59 @@
             </span>
         </td>
 
+
         <!-- Actions -->
         <td class="text-center">
 
-            <div class="d-flex justify-content-center align-items-center gap-2">
+            <div class="d-flex flex-column align-items-center gap-2">
 
-                <!-- Edit Project -->
-                <button type="button" class="btn btn-primary btn-sm text-nowrap" hx-get="/projects/{{project_id}}/edit"
-                    hx-target="closest tbody" hx-swap="outerHTML">
+                <!-- Edit and Delete -->
+                <div class="d-flex justify-content-center align-items-center gap-2">
 
-                    <i class="bi bi-pencil-square me-1"></i>
-                    Edit
+                    <!-- Edit Project -->
+                    <button type="button" class="btn btn-primary btn-sm text-nowrap"
+                        hx-get="/projects/{{project_id}}/edit" hx-target="closest tbody" hx-swap="outerHTML">
+
+                        <i class="bi bi-pencil-square me-1"></i>
+                        Edit
+                    </button>
+
+                    <!-- Delete Project -->
+                    {{#if linked_count}}
+
+                    <button type="button" class="btn btn-secondary btn-sm text-nowrap" disabled
+                        title="Cannot delete: this project has related members, activities or purchase orders.">
+
+                        <i class="bi bi-lock me-1"></i>
+                        Delete
+                    </button>
+
+                    {{else}}
+
+                    <button type="button" class="btn btn-danger btn-sm text-nowrap" hx-delete="/projects/{{project_id}}"
+                        hx-target="closest tbody" hx-swap="outerHTML"
+                        hx-confirm="This project has no linked records. Are you sure you want to permanently delete it?">
+
+                        <i class="bi bi-trash3 me-1"></i>
+                        Delete
+                    </button>
+
+                    {{/if}}
+
+                </div>
+
+                <!-- Project Details -->
+                <button type="button" class="btn btn-outline-primary btn-sm w-100"
+                    hx-get="/projects/{{project_id}}/details" hx-target="#main" hx-swap="innerHTML">
+
+                    <i class="bi bi-folder2-open me-1"></i>
+                    Project Details
                 </button>
-
-                <!-- Delete Project -->
-                {{#if linked_count}}
-
-                <button type="button" class="btn btn-secondary btn-sm text-nowrap" disabled
-                    title="Cannot delete: this project has related members, activities or purchase orders.">
-
-                    <i class="bi bi-lock me-1"></i>
-                    Delete
-                </button>
-
-                {{else}}
-
-                <button type="button" class="btn btn-danger btn-sm text-nowrap" hx-delete="/projects/{{project_id}}"
-                    hx-target="closest tbody" hx-swap="outerHTML"
-                    hx-confirm="This project has no linked records. Are you sure you want to permanently delete it?">
-
-                    <i class="bi bi-trash3 me-1"></i>
-                    Delete
-                </button>
-
-                {{/if}}
 
             </div>
 
         </td>
+
 
     </tr>
 

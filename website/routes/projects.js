@@ -473,6 +473,32 @@ router.post('/', (req, res) => {
     );
 });
 
+// READ: Individual Project Details workspace
+router.get('/:id/details', (req, res) => {
+
+    queryProjects(
+        ' WHERE p.project_id = ?',
+        [req.params.id],
+        (err, data) => {
+
+            if (err) {
+                console.error('Error fetching project details:', err);
+
+                return res.status(500).send(
+                    'Unable to retrieve project details.'
+                );
+            }
+
+            if (data.length === 0) {
+                return res.status(404).send(
+                    'Project not found.'
+                );
+            }
+
+            res.render('projects/details', data[0]);
+        }
+    );
+});
 
 // READ: One project as an edit form or as a normal row (Cancel button)
 router.get('/:id/:view', (req, res) => {
