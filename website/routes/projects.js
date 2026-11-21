@@ -1,4 +1,7 @@
 const express = require('express');
+const {
+    randomUUID
+} = require('node:crypto');
 
 const router = express.Router();
 
@@ -153,7 +156,93 @@ function findProjects(query, callback) {
 }
 
 
-// READ: Project list page (filters, search and all projects)
+// Helper: render one project as a table row
+function renderRow(res, project_id) {
+
+    queryProjects(' WHERE p.project_id = ?', [project_id], (err, data) => {
+
+        if (err) {
+            console.error('Error fetching project:', err);
+            return sendError(res, 500, 'Unable to retrieve project.');
+        }
+
+        if (data.length === 0) {
+            return sendError(res, 404, 'Project not found.');
+        }
+
+        res.render('projects/row', data[0]);
+    });
+}
+
+
+// Helper: read the project form fields (used by CREATE and UPDATE)
+function readProjectForm(body) {
+
+    const text = (value) =>
+        typeof value === 'string' ? value.trim() : '';
+
+    return {
+        company_id: text(body.company_id),
+        status_id: text(body.status_id),
+        project_name: text(body.project_name),
+        location: text(body.location),
+        description: text(body.description),
+        start_date: text(body.start_date),
+        end_date: text(body.end_date)
+    };
+}
+
+
+// Helper: validate the project form, returns an error message or null
+function validateProject(project) {
+
+    const isDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value);
+
+    if (!project.project_name || project.project_name.length > 50) {
+        return 'Project name is required (maximum 50 characters).';
+    }
+
+    if (!project.company_id) {
+        return 'Please select a company.';
+    }
+
+    if (!project.status_id) {
+        return 'Please select a project status.';
+    }
+
+    if ((project.start_date && !isDate(project.start_date)) ||
+        (project.end_date && !isDate(project.end_date))) {
+        return 'Dates must use the format YYYY-MM-DD.';
+    }
+
+    // YYYY-MM-DD strings can be compared directly
+    if (project.start_date && project.end_date &&
+        project.end_date < project.start_date) {
+        return 'End date cannot be earlier than start date.';
+    }
+
+    return null;
+}
+
+
+// Helper: friendly messages for database errors on CREATE / UPDATE
+function sendDatabaseError(res, err, action) {
+
+    console.error('Error ' + action + ' project:', err);
+
+    if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+        return sendError(res, 400, 'The selected company or status does not exist.');
+    }
+
+    if (err.code === 'ER_CHECK_CONSTRAINT_VIOLATED') {
+        return sendError(res, 400, 'End date cannot be earlier than start date.');
+    }
+
+    return sendError(res, 500, 'Unable to ' + action + ' project.');
+}
+
+
+// READ: Project list page (filters, search, add form and all projects)
 router.get('/', (req, res) => {
 
     loadOptions((err, options) => {
@@ -194,6 +283,50 @@ router.get('/list', (req, res) => {
             data: data
         });
     });
+});
+
+
+// CREATE: Add a new project
+router.post('/', (req, res) => {
+
+    const project = readProjectForm(req.body);
+
+    const error = validateProject(project);
+    if (error) {
+        return sendError(res, 400, error);
+    }
+
+    const project_id = randomUUID();
+
+    const SQL = `
+        INSERT INTO projects
+            (project_id, company_id, project_name, description,
+             location, start_date, end_date, status_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    router.connection.execute(
+        SQL,
+        [
+            project_id,
+            project.company_id,
+            project.project_name,
+            project.description || null,
+            project.location || null,
+            project.start_date || null,
+            project.end_date || null,
+            project.status_id
+        ],
+        (err) => {
+
+            if (err) {
+                return sendDatabaseError(res, err, 'add');
+            }
+
+            // Return the newly created table row
+            renderRow(res, project_id);
+        }
+    );
 });
 
 module.exports = router;
