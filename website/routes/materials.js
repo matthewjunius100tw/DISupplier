@@ -6,7 +6,8 @@ const {
 const router = express.Router();
 
 // Number of materials loaded at a time (infinite scroll)
-const PAGE_SIZE = 50;
+const PAGE_SIZE_OPTIONS = [25, 50, 100];
+const DEFAULT_PAGE_SIZE = 25;
 
 // Shared SELECT: material, its category name, and how many
 // supplier / project records use it (used to protect deletion)
@@ -81,6 +82,8 @@ function loadCategories(callback) {
 
 // Helper: retrieve one page of materials using the category filter
 // (master-detail) and the keyword search
+
+// Helper: retrieve paginated materials using category and keyword filters
 function findMaterials(query, callback) {
 
     const category_id =
@@ -89,53 +92,139 @@ function findMaterials(query, callback) {
     const keyword =
         typeof query.q === 'string' ? query.q.trim() : '';
 
-    const page = Math.max(parseInt(query.page, 10) || 1, 1);
+    // Accept only 25, 50, or 100 records per page
+    const requestedSize = Number(query.page_size);
+
+    const pageSize = PAGE_SIZE_OPTIONS.includes(requestedSize)
+        ? requestedSize
+        : DEFAULT_PAGE_SIZE;
+
+    const requestedPage = Math.max(
+        parseInt(query.page, 10) || 1,
+        1
+    );
 
     const conditions = [];
     const params = [];
 
+    // Category filtering
     if (category_id) {
         conditions.push('m.category_id = ?');
         params.push(category_id);
     }
 
+    // Keyword search
     if (keyword) {
-        conditions.push('(m.material_name LIKE ? OR m.material_id LIKE ?)');
+        conditions.push(
+            '(m.material_name LIKE ? OR m.material_id LIKE ?)'
+        );
+
         params.push('%' + keyword + '%', '%' + keyword + '%');
     }
 
-    // LIMIT and OFFSET are numbers calculated by us (not user text),
-    // so they are safe to put directly in the SQL.
-    // We ask for one extra row to know whether there is another page.
-    const extraSQL =
-        (conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '') +
-        ' ORDER BY m.material_name, m.material_id' +
-        ' LIMIT ' + (PAGE_SIZE + 1) +
-        ' OFFSET ' + ((page - 1) * PAGE_SIZE);
+    const whereSQL = conditions.length > 0
+        ? ' WHERE ' + conditions.join(' AND ')
+        : '';
 
-    queryMaterials(extraSQL, params, (err, rows) => {
+    // Count all records matching the current search and filter
+    const countSQL = `
+        SELECT COUNT(*) AS total
+        FROM materials m
+        JOIN material_categories mc
+            ON m.category_id = mc.category_id
+        ${whereSQL}
+    `;
+
+    router.connection.execute(countSQL, params, (err, countRows) => {
 
         if (err) {
             return callback(err);
         }
 
-        const hasMore = rows.length > PAGE_SIZE;
+        const total = Number(countRows[0].total);
 
-        // URL used by the infinite scroll row to load the next page
-        const nextUrl = hasMore ?
-            '/materials/list?' + new URLSearchParams({
-                category_id: category_id,
-                q: keyword,
-                page: page + 1
-            }) :
-            null;
+        const totalPages = Math.max(
+            Math.ceil(total / pageSize),
+            1
+        );
 
-        callback(null, {
-            data: rows.slice(0, PAGE_SIZE),
-            nextUrl: nextUrl
+        // Prevent requesting pages beyond the available results
+        const page = Math.min(requestedPage, totalPages);
+        const offset = (page - 1) * pageSize;
+
+        const extraSQL =
+            whereSQL +
+            ' ORDER BY m.material_name, m.material_id' +
+            ' LIMIT ' + pageSize +
+            ' OFFSET ' + offset;
+
+        queryMaterials(extraSQL, params, (err, rows) => {
+
+            if (err) {
+                return callback(err);
+            }
+
+
+            const pageNumbers = new Set([
+                1,
+                totalPages,
+                page - 1,
+                page,
+                page + 1
+            ]);
+
+            const visiblePages = [...pageNumbers]
+                .filter(n => n >= 1 && n <= totalPages)
+                .sort((a, b) => a - b);
+
+            const pages = [];
+
+            visiblePages.forEach((number, index) => {
+
+                if (index > 0) {
+                    const gap = number - visiblePages[index - 1];
+
+                    if (gap === 2) {
+                        pages.push({
+                            number: number - 1,
+                            active: false
+                        });
+                    } else if (gap > 2) {
+                        pages.push({
+                            ellipsis: true
+                        });
+                    }
+                }
+
+                pages.push({
+                    number: number,
+                    active: number === page
+                });
+            });
+
+
+            callback(null, {
+                data: rows,
+                total: total,
+                page: page,
+                totalPages: totalPages,
+                pageSize: pageSize,
+                pageSizeOptions: PAGE_SIZE_OPTIONS.map(size => ({
+                    value: size,
+                    selected: size === pageSize
+                })),
+                pages: pages,
+                hasPrevious: page > 1,
+                hasNext: page < totalPages,
+                previousPage: page - 1,
+                nextPage: page + 1,
+                startRecord: total === 0 ? 0 : offset + 1,
+                endRecord: Math.min(offset + pageSize, total)
+            });
         });
     });
 }
+
 
 
 // Helper: render one material as a table row
@@ -210,9 +299,9 @@ router.get('/', (req, res) => {
 
             res.render('materials/index', {
                 categories: categories,
-                data: result.data,
-                nextUrl: result.nextUrl
+                ...result
             });
+
         });
     });
 });
@@ -228,7 +317,8 @@ router.get('/list', (req, res) => {
             return sendError(res, 500, 'Unable to retrieve materials.');
         }
 
-        res.render('materials/rows', result);
+        res.render('materials/results', result);
+
     });
 });
 
