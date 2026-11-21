@@ -1,0 +1,317 @@
+<div class="mt-4 mb-5">
+
+    <!-- Back to Projects -->
+    <button type="button" class="btn btn-outline-secondary btn-sm mb-4" hx-get="/projects" hx-target="#main"
+        hx-swap="innerHTML">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to Projects
+    </button>
+
+    <!-- Project Header -->
+    <div class="mb-4">
+
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+
+            <div>
+                <h2 class="mb-2">
+                    <i class="bi bi-kanban me-2"></i>
+                    {{project_name}}
+                </h2>
+
+                <div class="d-flex flex-wrap gap-3 text-muted">
+
+                    <span>
+                        <i class="bi bi-building me-1"></i>
+                        {{company_name}}
+                    </span>
+
+                    <span>
+                        <i class="bi bi-geo-alt me-1"></i>
+                        {{#if location}}
+                        {{location}}
+                        {{else}}
+                        Location not provided
+                        {{/if}}
+                    </span>
+
+                </div>
+            </div>
+
+            <span class="badge {{status_badge}} fs-6">
+                {{status_name}}
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- Project Workspace -->
+    <div class="card">
+
+        <div class="card-header bg-white pt-3 pb-0">
+
+            <!-- Project Navigation Tabs -->
+            <ul class="nav nav-tabs card-header-tabs" id="project-detail-tabs" role="tablist">
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="project-overview-tab" data-bs-toggle="tab"
+                        data-bs-target="#project-overview" type="button" role="tab" aria-controls="project-overview"
+                        aria-selected="true">
+
+                        <i class="bi bi-grid me-1"></i>
+                        Overview
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="project-activities-tab" data-bs-toggle="tab"
+                        data-bs-target="#project-activities" type="button" role="tab" aria-controls="project-activities"
+                        aria-selected="false">
+
+                        <i class="bi bi-list-check me-1"></i>
+                        Activities
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="project-members-tab" data-bs-toggle="tab"
+                        data-bs-target="#project-members" type="button" role="tab" aria-controls="project-members"
+                        aria-selected="false">
+
+                        <i class="bi bi-people me-1"></i>
+                        Members
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="project-materials-tab" data-bs-toggle="tab"
+                        data-bs-target="#project-materials" type="button" role="tab" aria-controls="project-materials"
+                        aria-selected="false">
+
+                        <i class="bi bi-box-seam me-1"></i>
+                        Materials
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="project-orders-tab" data-bs-toggle="tab"
+                        data-bs-target="#project-orders" type="button" role="tab" aria-controls="project-orders"
+                        aria-selected="false">
+
+                        <i class="bi bi-cart me-1"></i>
+                        Purchase Orders
+                    </button>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <div class="tab-content" id="project-detail-content">
+
+                <!-- OVERVIEW -->
+                <div class="tab-pane fade show active" id="project-overview" role="tabpanel"
+                    aria-labelledby="project-overview-tab">
+
+                    <h5 class="mb-3">Project Overview</h5>
+
+                    <!-- Summary Cards -->
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="text-muted small mb-2">
+                                        <i class="bi bi-list-check me-1"></i>
+                                        Project Activities
+                                    </div>
+                                    <h3 class="mb-0">{{activities_count}}</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="text-muted small mb-2">
+                                        <i class="bi bi-people me-1"></i>
+                                        Project Members
+                                    </div>
+                                    <h3 class="mb-0">{{members_count}}</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="text-muted small mb-2">
+                                        <i class="bi bi-cart me-1"></i>
+                                        Purchase Orders
+                                    </div>
+                                    <h3 class="mb-0">{{orders_count}}</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- General Information -->
+                    <h5 class="mb-3">General Information</h5>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+                            <div class="text-muted small mb-1">
+                                Project Name
+                            </div>
+                            <div>{{project_name}}</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="text-muted small mb-1">
+                                Company
+                            </div>
+                            <div>{{company_name}}</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="text-muted small mb-1">
+                                Start Date
+                            </div>
+                            <div>
+                                {{#if start_date_display}}
+                                {{start_date_display}}
+                                {{else}}
+                                TBD
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="text-muted small mb-1">
+                                End Date
+                            </div>
+                            <div>
+                                {{#if end_date_display}}
+                                {{end_date_display}}
+                                {{else}}
+                                TBD
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="text-muted small mb-1">
+                                Location
+                            </div>
+                            <div style="white-space: pre-line; overflow-wrap: anywhere;">
+                                {{#if location}}
+                                {{location}}
+                                {{else}}
+                                -
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="text-muted small mb-1">
+                                Description
+                            </div>
+                            <div style="white-space: pre-line; overflow-wrap: anywhere;">
+                                {{#if description}}
+                                {{description}}
+                                {{else}}
+                                <span class="text-muted">Not provided</span>
+                                {{/if}}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTIVITIES -->
+                <div class="tab-pane fade" id="project-activities" role="tabpanel"
+                    aria-labelledby="project-activities-tab">
+
+                    <h5>Project Activities</h5>
+
+                    <p class="text-muted">
+                        Manage construction activities, schedules,
+                        and activity progress for this project.
+                    </p>
+
+                    <div class="alert alert-light border">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Project Activities Management will be
+                        developed in the next phase.
+                    </div>
+
+                </div>
+
+                <!-- MEMBERS -->
+                <div class="tab-pane fade" id="project-members" role="tabpanel" aria-labelledby="project-members-tab">
+
+                    <h5>Project Members</h5>
+
+                    <p class="text-muted">
+                        Manage the users assigned to this project
+                        and their respective roles.
+                    </p>
+
+                    <div class="alert alert-light border">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Project Members Management will be
+                        developed in the next phase.
+                    </div>
+
+                </div>
+
+                <!-- MATERIALS -->
+                <div class="tab-pane fade" id="project-materials" role="tabpanel"
+                    aria-labelledby="project-materials-tab">
+
+                    <h5>Project Material Requirements</h5>
+
+                    <p class="text-muted">
+                        Manage materials required for project activities,
+                        including quantities and specifications.
+                    </p>
+
+                    <div class="alert alert-light border">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Project Material Requirements Management
+                        will be developed in the next phase.
+                    </div>
+
+                </div>
+
+                <!-- PURCHASE ORDERS -->
+                <div class="tab-pane fade" id="project-orders" role="tabpanel" aria-labelledby="project-orders-tab">
+
+                    <h5>Project Purchase Orders</h5>
+
+                    <p class="text-muted">
+                        View and manage purchase orders
+                        associated with this project.
+                    </p>
+
+                    <div class="alert alert-light border">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Project Purchase Orders integration
+                        will be developed in the next phase.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
