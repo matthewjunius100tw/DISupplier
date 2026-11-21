@@ -92,6 +92,14 @@ materials.connection = connection;
 // Register Material List routes
 app.use('/materials', materials);
 
+const projects = require('./routes/projects');
+
+// Share the database connection with the router
+projects.connection = connection;
+
+// Register Projects routes
+app.use('/projects', projects);
+
 
 // Start web server
 app.listen(80, () => {
