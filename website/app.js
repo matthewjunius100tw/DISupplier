@@ -6,7 +6,9 @@ const config = require('./config');
 const app = express();
 
 // Configure Handlebars template engine
-const { engine } = require('express-handlebars');
+const {
+    engine
+} = require('express-handlebars');
 
 app.engine('hbs', engine({
     extname: '.hbs',
@@ -30,7 +32,9 @@ connection.connect((err) => {
 
 
 // Middleware for processing form data
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+    extended: true
+}));
 
 // Serve static files and frontend libraries
 app.use(express.static('public'));
@@ -79,6 +83,14 @@ materialCategories.connection = connection;
 
 // Register Material Categories routes
 app.use('/material-categories', materialCategories);
+
+const materials = require('./routes/materials');
+
+// Share the database connection with the router
+materials.connection = connection;
+
+// Register Material List routes
+app.use('/materials', materials);
 
 
 // Start web server
