@@ -1,0 +1,34 @@
+<tr id="project-{{project_id}}" class="align-middle">
+
+    <td>
+        <div class="fw-semibold">{{project_name}}</div>
+        {{#if description}}
+        <div class="small text-muted text-truncate" style="max-width: 240px;" title="{{description}}">
+            {{description}}
+        </div>
+        {{/if}}
+    </td>
+
+    <td>{{company_name}}</td>
+
+    <td>{{#if location}}{{location}}{{else}}-{{/if}}</td>
+
+    <td class="small text-nowrap">
+        {{#if start_date}}{{start_date}}{{else}}TBD{{/if}}
+        ~
+        {{#if end_date}}{{end_date}}{{else}}TBD{{/if}}
+    </td>
+
+    <td>
+        <span class="badge {{status_badge}}">{{status_name}}</span>
+    </td>
+
+    <td>
+        <span class="badge bg-secondary">{{members_count}}</span>
+    </td>
+
+    <td>
+        <span class="badge bg-secondary">{{orders_count}}</span>
+    </td>
+
+</tr>
