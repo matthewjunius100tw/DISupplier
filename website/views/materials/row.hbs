@@ -2,30 +2,31 @@
 
     <td><code>{{material_id}}</code></td>
 
-    <td>{{material_name}}</td>
+    <td style="overflow-wrap: anywhere; white-space: normal;">
+        {{material_name}}
+    </td>
 
     <td>{{category_name}}</td>
 
     <td>{{unit}}</td>
 
-    <td>
+    <!-- Specification -->
+    <td class="text-start" style="overflow-wrap: anywhere; white-space: normal;">
         {{#if specification}}
-        <div class="text-truncate small text-muted" style="max-width: 260px;" title="{{specification}}">
-            {{specification}}
-        </div>
+        <span class="small text-muted" style="white-space: pre-line;">{{specification}}</span>
         {{else}}
-        -
+        <span>-</span>
         {{/if}}
     </td>
 
     <!-- Number of supplier / project records using this material -->
-    <td>
+    <td class="text-center">
         <span class="badge bg-secondary">
             {{usage_count}}
         </span>
     </td>
 
-    <td class="text-nowrap">
+    <td class="text-center text-nowrap">
         <button type="button" class="btn btn-sm {{#if is_active}}btn-primary{{else}}btn-secondary{{/if}}"
             hx-put="/materials/{{material_id}}/status" hx-target="closest tr" hx-swap="outerHTML"
             hx-confirm="Are you sure you want to change this material's status?">
@@ -41,38 +42,46 @@
         </button>
     </td>
 
-    <td class="text-nowrap">
-        <!-- Edit Material -->
-        <button type="button" class="btn btn-primary btn-sm" hx-get="/materials/{{material_id}}/edit"
-            hx-target="closest tr" hx-swap="outerHTML">
 
-            <i class="bi bi-pencil-square me-1"></i>
-            Edit
-        </button>
+    <!-- Actions -->
+    <td class="text-center">
 
-        <!-- Delete Material -->
-        {{#if usage_count}}
+        <div class="d-flex flex-column align-items-center gap-2">
 
-        <!-- Deletion disabled: material is used by suppliers or projects -->
-        <button type="button" class="btn btn-secondary btn-sm ms-2" disabled
-            title="Cannot delete: this material is used by suppliers or projects. Change its status to Inactive instead.">
+            <!-- Edit Material -->
+            <button type="button" class="btn btn-primary btn-sm" style="width: 90px;"
+                hx-get="/materials/{{material_id}}/edit" hx-target="closest tr" hx-swap="outerHTML">
 
-            <i class="bi bi-lock me-1"></i>
-            Delete
-        </button>
+                <i class="bi bi-pencil-square me-1"></i>
+                Edit
+            </button>
 
-        {{else}}
+            <!-- Delete Material -->
+            {{#if usage_count}}
 
-        <!-- Deletion allowed: material is not used yet -->
-        <button type="button" class="btn btn-danger btn-sm ms-2" hx-delete="/materials/{{material_id}}"
-            hx-target="closest tr" hx-swap="outerHTML"
-            hx-confirm="This material is not used by any supplier or project. Are you sure you want to permanently delete it?">
+            <!-- Deletion disabled: material is used -->
+            <button type="button" class="btn btn-secondary btn-sm" style="width: 90px;" disabled
+                title="Cannot delete: this material is used by suppliers or projects. Change its status to Inactive instead.">
 
-            <i class="bi bi-trash3 me-1"></i>
-            Delete
-        </button>
+                <i class="bi bi-lock me-1"></i>
+                Delete
+            </button>
 
-        {{/if}}
+            {{else}}
+
+            <!-- Deletion allowed: material is not used -->
+            <button type="button" class="btn btn-danger btn-sm" style="width: 90px;"
+                hx-delete="/materials/{{material_id}}" hx-target="closest tr" hx-swap="outerHTML"
+                hx-confirm="This material is not used by any supplier or project. Are you sure you want to permanently delete it?">
+
+                <i class="bi bi-trash3 me-1"></i>
+                Delete
+            </button>
+
+            {{/if}}
+
+        </div>
+
     </td>
 
 </tr>
