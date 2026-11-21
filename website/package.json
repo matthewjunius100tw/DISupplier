@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "bootstrap": "^5.3.9",
+    "bootstrap-icons": "^1.13.2",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "express-handlebars": "^9.0.6",
+    "htmx.org": "^4.0.1",
+    "mysql2": "^3.24.6"
+  }
+}

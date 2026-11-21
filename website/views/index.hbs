@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{title}}</title>
+
+    <script src="/htmx.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <!-- DISupplier Header -->
+    <header class="site-header">
+        <div class="header-container">
+
+            <!-- Left: Platform Description -->
+            <div class="header-left">
+                <h1>DISupplier</h1>
+                <p class="site-subtitle">
+                    Construction Procurement and Supplier Management Platform
+                </p>
+            </div>
+
+            <!-- Right: DISupplier Logo -->
+            <div class="header-right">
+                <img src="/images/disupplier-logo.png" alt="DISupplier Logo" class="disupplier-logo">
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Navigation Bar -->
+    {{> navbar}}
+
+    <!-- Main Content -->
+
+    <main id="main" class="container" {{#if where}} hx-get="{{where}}" hx-trigger="load" {{/if}}>
+        <section class="home-content">
+            <h2>Welcome to DISupplier</h2>
+            <p>
+                Streamlining construction procurement,
+                material management, and supplier collaboration.
+            </p>
+            <i class="bi bi-buildings" style="font-size: 70px; color: var(--di-blue);">
+            </i>
+        </section>
+    </main>
+
+    <!-- Company Footer -->
+    <footer class="site-footer">
+        <p>Developed by</p>
+
+        <img src="/images/digital-idea-solution.png" alt="Digital Idea Solution" class="company-logo">
+
+        <p class="footer-caption">
+            Digital Idea Solution
+        </p>
+
+        <p class="footer-caption">
+            &copy; 2026 DISupplier. All Rights Reserved.
+        </p>
+    </footer>
+
+</body>
+
+</html>
