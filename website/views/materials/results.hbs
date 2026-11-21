@@ -54,20 +54,29 @@
     </div>
 
 
-    <!-- Pagination Controls -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
 
-        <!-- Results Information -->
-        <div class="text-muted small">
+    <!-- Pagination Controls -->
+    <div class="mt-3 mb-4">
+
+        <!-- Results Information: right aligned below table -->
+        <div class="text-end text-muted small mb-3">
             Showing {{startRecord}}–{{endRecord}} of {{total}} materials
         </div>
 
-        <!-- Pagination -->
-        <nav aria-label="Material pagination">
+        <!-- Centered Pagination -->
+        <nav aria-label="Material pagination" class="d-flex justify-content-center">
 
-            <div class="d-flex align-items-center gap-1">
+            <div class="d-flex align-items-center gap-1 flex-wrap justify-content-center">
 
-                <!-- Previous -->
+                <!-- First Page -->
+                <button type="button" class="btn btn-outline-secondary btn-sm" title="First page" {{#unless
+                    hasPrevious}}disabled{{/unless}} hx-get="/materials/list?page={{firstPage}}"
+                    hx-include="#material-category-filter, #material-search, #material-page-size"
+                    hx-target="#material-results" hx-swap="outerHTML">
+                    <i class="bi bi-chevron-double-left"></i>
+                </button>
+
+                <!-- Previous Page -->
                 <button type="button" class="btn btn-outline-secondary btn-sm" title="Previous page" {{#unless
                     hasPrevious}}disabled{{/unless}} hx-get="/materials/list?page={{previousPage}}"
                     hx-include="#material-category-filter, #material-search, #material-page-size"
@@ -75,27 +84,19 @@
                     <i class="bi bi-chevron-left"></i>
                 </button>
 
-                <!-- Page Numbers -->
+                <!-- Five Consecutive Page Numbers -->
                 {{#each pages}}
 
-                {{#if ellipsis}}
-
-                <span class="px-2 text-muted">...</span>
-
-                {{else}}
-
                 <button type="button" class="btn btn-sm {{#if active}}btn-primary{{else}}btn-outline-secondary{{/if}}"
-                    style="min-width: 34px;" {{#if active}}disabled{{/if}} hx-get="/materials/list?page={{number}}"
+                    style="min-width: 36px;" {{#if active}}disabled{{/if}} hx-get="/materials/list?page={{number}}"
                     hx-include="#material-category-filter, #material-search, #material-page-size"
                     hx-target="#material-results" hx-swap="outerHTML">
                     {{number}}
                 </button>
 
-                {{/if}}
-
                 {{/each}}
 
-                <!-- Next -->
+                <!-- Next Page -->
                 <button type="button" class="btn btn-outline-secondary btn-sm" title="Next page" {{#unless
                     hasNext}}disabled{{/unless}} hx-get="/materials/list?page={{nextPage}}"
                     hx-include="#material-category-filter, #material-search, #material-page-size"
@@ -103,7 +104,18 @@
                     <i class="bi bi-chevron-right"></i>
                 </button>
 
+                <!-- Last Page -->
+                <button type="button" class="btn btn-outline-secondary btn-sm" title="Last page" {{#unless
+                    hasNext}}disabled{{/unless}} hx-get="/materials/list?page={{lastPage}}"
+                    hx-include="#material-category-filter, #material-search, #material-page-size"
+                    hx-target="#material-results" hx-swap="outerHTML">
+                    <i class="bi bi-chevron-double-right"></i>
+                </button>
+
             </div>
+
         </nav>
 
     </div>
+
+</div>
