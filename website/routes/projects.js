@@ -5,6 +5,10 @@ const {
 
 const router = express.Router();
 
+const PAGE_SIZE_OPTIONS = [25, 50, 100];
+const DEFAULT_PAGE_SIZE = 25;
+
+
 // Shared SELECT: project with its company and status names, and how many
 // members / activities / purchase orders belong to it
 const SELECT_PROJECTS = `
@@ -15,6 +19,8 @@ const SELECT_PROJECTS = `
         p.location,
         DATE_FORMAT(p.start_date, '%Y-%m-%d') AS start_date,
         DATE_FORMAT(p.end_date, '%Y-%m-%d') AS end_date,
+        DATE_FORMAT(p.start_date, '%d/%m/%Y') AS start_date_display,
+        DATE_FORMAT(p.end_date, '%d/%m/%Y') AS end_date_display,
         p.company_id,
         c.company_name,
         p.status_id,
@@ -125,6 +131,8 @@ function loadOptions(callback) {
 
 
 // Helper: retrieve projects using the company / status filters and keyword search
+
+// Helper: retrieve paginated projects with filters and search
 function findProjects(query, callback) {
 
     const text = (value) =>
@@ -134,30 +142,137 @@ function findProjects(query, callback) {
     const status_id = text(query.status_id);
     const keyword = text(query.q);
 
+    // Pagination settings
+    const requestedSize = Number(query.page_size);
+
+    const pageSize = PAGE_SIZE_OPTIONS.includes(requestedSize)
+        ? requestedSize
+        : DEFAULT_PAGE_SIZE;
+
+    const requestedPage = Math.max(
+        parseInt(query.page, 10) || 1,
+        1
+    );
+
     const conditions = [];
     const params = [];
 
+    // Company filter
     if (company_id) {
         conditions.push('p.company_id = ?');
         params.push(company_id);
     }
 
+    // Status filter
     if (status_id) {
         conditions.push('p.status_id = ?');
         params.push(status_id);
     }
 
+    // Keyword search
     if (keyword) {
-        conditions.push('(p.project_name LIKE ? OR p.location LIKE ?)');
-        params.push('%' + keyword + '%', '%' + keyword + '%');
+        conditions.push(
+            '(p.project_name LIKE ? OR p.location LIKE ?)'
+        );
+
+        params.push(
+            '%' + keyword + '%',
+            '%' + keyword + '%'
+        );
     }
 
-    const extraSQL =
-        (conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '') +
-        ' ORDER BY p.start_date DESC, p.project_name';
+    const whereSQL = conditions.length > 0
+        ? ' WHERE ' + conditions.join(' AND ')
+        : '';
 
-    queryProjects(extraSQL, params, callback);
+    // Count all matching projects
+    const countSQL = `
+        SELECT COUNT(*) AS total
+        FROM projects p
+        ${whereSQL}
+    `;
+
+    router.connection.execute(
+        countSQL,
+        params,
+        (err, countRows) => {
+
+            if (err) {
+                return callback(err);
+            }
+
+            const total = Number(countRows[0].total);
+
+            const totalPages = Math.max(
+                Math.ceil(total / pageSize),
+                1
+            );
+
+            const page = Math.min(requestedPage, totalPages);
+            const offset = (page - 1) * pageSize;
+
+            // Retrieve only the requested page
+            const extraSQL =
+                whereSQL +
+                ' ORDER BY p.start_date DESC, p.project_name, p.project_id' +
+                ' LIMIT ' + pageSize +
+                ' OFFSET ' + offset;
+
+            queryProjects(extraSQL, params, (err, rows) => {
+
+                if (err) {
+                    return callback(err);
+                }
+
+                // Display up to five consecutive page numbers
+                const visibleCount = Math.min(5, totalPages);
+
+                const startPage = Math.max(
+                    1,
+                    Math.min(
+                        page - 2,
+                        totalPages - visibleCount + 1
+                    )
+                );
+
+                const pages = [];
+
+                for (
+                    let number = startPage;
+                    number < startPage + visibleCount;
+                    number++
+                ) {
+                    pages.push({
+                        number: number,
+                        active: number === page
+                    });
+                }
+
+                callback(null, {
+                    data: rows,
+                    total: total,
+                    page: page,
+                    totalPages: totalPages,
+                    pageSize: pageSize,
+                    pageSizeOptions: PAGE_SIZE_OPTIONS.map(size => ({
+                        value: size,
+                        selected: size === pageSize
+                    })),
+                    pages: pages,
+                    hasPrevious: page > 1,
+                    hasNext: page < totalPages,
+                    previousPage: page - 1,
+                    nextPage: page + 1,
+                    firstPage: 1,
+                    lastPage: totalPages,
+                    startRecord: total === 0 ? 0 : offset + 1,
+                    endRecord: Math.min(offset + pageSize, total)
+                });
+            });
+        }
+    );
 }
+
 
 
 // Helper: render one project as a table row
@@ -247,31 +362,54 @@ function sendDatabaseError(res, err, action) {
 
 
 // READ: Project list page (filters, search, add form and all projects)
+// READ: Project Management main page
 router.get('/', (req, res) => {
 
     loadOptions((err, options) => {
 
         if (err) {
-            console.error('Error fetching companies or statuses:', err);
-            return res.status(500).send('Unable to retrieve companies or statuses.');
+            console.error('Error fetching project options:', err);
+
+            return res.status(500).send(
+                'Unable to retrieve companies or statuses.'
+            );
         }
 
-        findProjects(req.query, (err, data) => {
+        findProjects(req.query, (err, result) => {
 
             if (err) {
                 console.error('Error fetching projects:', err);
-                return res.status(500).send('Unable to retrieve projects.');
+
+                return res.status(500).send(
+                    'Unable to retrieve projects.'
+                );
             }
 
             res.render('projects/index', {
                 companies: options.companies,
                 statuses: options.statuses,
-                data: data
+                ...result
             });
         });
     });
 });
 
+// READ: Paginated project results
+router.get('/list', (req, res) => {
+
+    findProjects(req.query, (err, result) => {
+
+        if (err) {
+            console.error('Error fetching projects:', err);
+
+            return sendError(
+                res, 500, 'Unable to retrieve projects.'
+            );
+        }
+
+        res.render('projects/results', result);
+    });
+});
 
 // READ: Table rows only (used by the filters and keyword search)
 router.get('/list', (req, res) => {
@@ -327,8 +465,10 @@ router.post('/', (req, res) => {
                 return sendDatabaseError(res, err, 'add');
             }
 
-            // Return the newly created table row
+            // Notify the frontend to refresh the paginated project list
+            res.set('HX-Trigger', 'project-changed');
             renderRow(res, project_id);
+
         }
     );
 });
@@ -484,7 +624,10 @@ router.delete('/:id', (req, res) => {
             }
 
             // Step 4: Empty response removes the row from the table
+            // Refresh project results after successful deletion
+            res.set('HX-Trigger', 'project-changed');
             res.send('');
+
         });
     });
 });
