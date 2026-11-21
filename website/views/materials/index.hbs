@@ -18,7 +18,7 @@
         <div class="card-body">
 
             <form hx-post="/materials" hx-target="#material-table-body" hx-swap="afterbegin"
-                hx-on::after:request="if (ctx.response.status < 400) { this.reset(); document.querySelector('#material-message').innerHTML = ''; }">
+                hx-on::after:request="if (ctx.response.status < 400) { this.reset(); document.querySelector('#material-message').innerHTML = ''; document.querySelector('#material-category-filter').dispatchEvent(new Event('change', { bubbles: true })); }">
 
                 <div class="row g-3">
 
@@ -45,8 +45,8 @@
                     <!-- Unit -->
                     <div class="col-md-2">
                         <label class="form-label">Unit</label>
-                        <input type="text" name="unit" class="form-control" maxlength="30"
-                            placeholder="e.g. m3, kg" required>
+                        <input type="text" name="unit" class="form-control" maxlength="30" placeholder="e.g. m3, kg"
+                            required>
                     </div>
 
                     <!-- Specification -->
@@ -75,9 +75,10 @@
     <div class="row g-2 mb-3">
 
         <div class="col-md-4">
-            <select id="material-category-filter" name="category_id" class="form-select"
-                hx-get="/materials/list" hx-trigger="change" hx-target="#material-table-body"
-                hx-include="#material-search">
+
+            <select id="material-category-filter" name="category_id" class="form-select" hx-get="/materials/list"
+                hx-trigger="change" hx-target="#material-results" hx-swap="outerHTML"
+                hx-include="#material-search, #material-page-size">
                 <option value="">All categories</option>
                 {{#each categories}}
                 <option value="{{category_id}}">{{category_name}}{{#unless is_active}} (inactive){{/unless}}</option>
@@ -86,36 +87,19 @@
         </div>
 
         <div class="col-md-8">
+
             <input id="material-search" type="search" name="q" class="form-control"
-                placeholder="Search by material name or ID..."
-                hx-get="/materials/list" hx-trigger="input delay:300ms" hx-target="#material-table-body"
-                hx-include="#material-category-filter">
+                placeholder="Search by material name or ID..." hx-get="/materials/list" hx-trigger="input delay:300ms"
+                hx-target="#material-results" hx-swap="outerHTML"
+                hx-include="#material-category-filter, #material-page-size">
+
         </div>
 
     </div>
 
 
     <div class="table-responsive">
-        <table class="table table-striped table-hover align-middle">
-
-            <thead class="table-light">
-                <tr>
-                    <th>Material ID</th>
-                    <th>Material Name</th>
-                    <th>Category</th>
-                    <th>Unit</th>
-                    <th>Specification</th>
-                    <th>Used In</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <tbody id="material-table-body">
-                {{> materials/rows}}
-            </tbody>
-
-        </table>
+        {{> materials/results}}
     </div>
 
 </div>
