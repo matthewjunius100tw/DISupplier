@@ -42,6 +42,8 @@ app.use(express.static('node_modules/htmx.org/dist'));
 app.use(express.static('node_modules/bootstrap/dist/css'));
 app.use(express.static('node_modules/bootstrap/dist/js'));
 app.use(express.static('node_modules/bootstrap-icons/font'));
+// Serve Flatpickr calendar library
+app.use(express.static('node_modules/flatpickr/dist'));
 
 // Homepage route
 app.get('/', (req, res) => {

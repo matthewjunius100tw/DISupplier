@@ -1,68 +1,218 @@
-<tr id="project-{{project_id}}" class="align-middle">
+<tbody id="project-{{project_id}}">
 
-    <td>
-        <div class="fw-semibold">{{project_name}}</div>
-        {{#if description}}
-        <div class="small text-muted text-truncate" style="max-width: 240px;" title="{{description}}">
-            {{description}}
-        </div>
-        {{/if}}
-    </td>
+    <!-- Main Project Row -->
+    <tr class="align-middle">
 
-    <td>{{company_name}}</td>
+        <!-- Project Name -->
+        <td style="overflow-wrap: anywhere;">
 
-    <td>{{#if location}}{{location}}{{else}}-{{/if}}</td>
+            <div class="d-flex align-items-center gap-2">
 
-    <td class="small text-nowrap">
-        {{#if start_date}}{{start_date}}{{else}}TBD{{/if}}
-        ~
-        {{#if end_date}}{{end_date}}{{else}}TBD{{/if}}
-    </td>
+                <button type="button" class="btn btn-sm btn-outline-secondary flex-shrink-0"
+                    title="Show project information" aria-label="Toggle project details" aria-expanded="false"
+                    aria-controls="project-details-{{project_id}}" onclick="
+                            const details = document.getElementById('project-details-{{project_id}}');
+                            const expanded = details.classList.toggle('d-none') === false;
+                            this.setAttribute('aria-expanded', String(expanded));
+                            this.querySelector('i').className =
+                                expanded ? 'bi bi-chevron-up' : 'bi bi-chevron-down';
+                        ">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
 
-    <td>
-        <span class="badge {{status_badge}}">{{status_name}}</span>
-    </td>
+                <span class="fw-semibold">{{project_name}}</span>
 
-    <td>
-        <span class="badge bg-secondary">{{members_count}}</span>
-    </td>
+            </div>
 
-    <td>
-        <span class="badge bg-secondary">{{orders_count}}</span>
-    </td>
+        </td>
 
-    <td class="text-nowrap">
-        <!-- Edit Project -->
-        <button type="button" class="btn btn-primary btn-sm" hx-get="/projects/{{project_id}}/edit"
-            hx-target="closest tr" hx-swap="outerHTML">
+        <!-- Company -->
+        <td style="overflow-wrap: anywhere;">
+            {{company_name}}
+        </td>
 
-            <i class="bi bi-pencil-square me-1"></i>
-            Edit
-        </button>
+        <!-- Location -->
+        <td style="overflow-wrap: anywhere;">
+            {{#if location}}
+            {{location}}
+            {{else}}
+            -
+            {{/if}}
+        </td>
 
-        <!-- Delete Project -->
-        {{#if linked_count}}
+        <!-- Period -->
+        <td class="small">
 
-        <!-- Deletion disabled: project already has members, activities or purchase orders -->
-        <button type="button" class="btn btn-secondary btn-sm ms-2" disabled
-            title="Cannot delete: this project has {{members_count}} members, {{activities_count}} activities and {{orders_count}} purchase orders. Change its status to Cancelled instead.">
+            <div class="text-nowrap">
+                {{#if start_date_display}}
+                {{start_date_display}}
+                {{else}}
+                TBD
+                {{/if}}
+            </div>
 
-            <i class="bi bi-lock me-1"></i>
-            Delete
-        </button>
+            <div class="text-nowrap text-muted">
+                to
+                {{#if end_date_display}}
+                {{end_date_display}}
+                {{else}}
+                TBD
+                {{/if}}
+            </div>
 
-        {{else}}
+        </td>
 
-        <!-- Deletion allowed: nothing is linked to this project yet -->
-        <button type="button" class="btn btn-danger btn-sm ms-2" hx-delete="/projects/{{project_id}}"
-            hx-target="closest tr" hx-swap="outerHTML"
-            hx-confirm="This project has no members, activities or purchase orders. Are you sure you want to permanently delete it?">
+        <!-- Status -->
+        <td class="text-center">
+            <span class="badge {{status_badge}}">
+                {{status_name}}
+            </span>
+        </td>
 
-            <i class="bi bi-trash3 me-1"></i>
-            Delete
-        </button>
+        <!-- Actions -->
+        <td class="text-center">
 
-        {{/if}}
-    </td>
+            <div class="d-flex justify-content-center align-items-center gap-2">
 
-</tr>
+                <!-- Edit Project -->
+                <button type="button" class="btn btn-primary btn-sm text-nowrap" hx-get="/projects/{{project_id}}/edit"
+                    hx-target="closest tbody" hx-swap="outerHTML">
+
+                    <i class="bi bi-pencil-square me-1"></i>
+                    Edit
+                </button>
+
+                <!-- Delete Project -->
+                {{#if linked_count}}
+
+                <button type="button" class="btn btn-secondary btn-sm text-nowrap" disabled
+                    title="Cannot delete: this project has related members, activities or purchase orders.">
+
+                    <i class="bi bi-lock me-1"></i>
+                    Delete
+                </button>
+
+                {{else}}
+
+                <button type="button" class="btn btn-danger btn-sm text-nowrap" hx-delete="/projects/{{project_id}}"
+                    hx-target="closest tbody" hx-swap="outerHTML"
+                    hx-confirm="This project has no linked records. Are you sure you want to permanently delete it?">
+
+                    <i class="bi bi-trash3 me-1"></i>
+                    Delete
+                </button>
+
+                {{/if}}
+
+            </div>
+
+        </td>
+
+    </tr>
+
+    <!-- Expandable Project Information -->
+    <tr id="project-details-{{project_id}}" class="d-none">
+
+        <td colspan="6">
+
+            <div class="border rounded p-3 bg-light">
+
+                <h6 class="mb-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Project Information
+                </h6>
+
+                <div class="row g-3">
+
+                    <!-- Project Description -->
+                    <div class="col-12">
+
+                        <div class="small text-muted mb-1">
+                            Description
+                        </div>
+
+                        <div style="white-space: pre-line; overflow-wrap: anywhere;">
+                            {{#if description}}
+                            {{description}}
+                            {{else}}
+                            <span class="text-muted">Not provided</span>
+                            {{/if}}
+                        </div>
+
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="col-md-6">
+                        <div class="small text-muted mb-1">
+                            Start Date
+                        </div>
+                        <div>
+                            {{#if start_date_display}}
+                            {{start_date_display}}
+                            {{else}}
+                            TBD
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="col-md-6">
+                        <div class="small text-muted mb-1">
+                            End Date
+                        </div>
+                        <div>
+                            {{#if end_date_display}}
+                            {{end_date_display}}
+                            {{else}}
+                            TBD
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <!-- Relationship Summary -->
+                    <div class="col-12">
+
+                        <hr class="my-2">
+
+                        <div class="row g-3">
+
+                            <div class="col-md-4">
+                                <div class="small text-muted mb-1">
+                                    Members
+                                </div>
+                                <span class="badge bg-secondary">
+                                    {{members_count}}
+                                </span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="small text-muted mb-1">
+                                    Activities
+                                </div>
+                                <span class="badge bg-secondary">
+                                    {{activities_count}}
+                                </span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="small text-muted mb-1">
+                                    Purchase Orders
+                                </div>
+                                <span class="badge bg-secondary">
+                                    {{orders_count}}
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</tbody>
