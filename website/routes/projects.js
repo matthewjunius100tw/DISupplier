@@ -73,6 +73,10 @@ function queryProjects(extraSQL, params, callback) {
                 row.activities_count = Number(row.activities_count);
                 row.orders_count = Number(row.orders_count);
 
+                // Total records linked to the project (used to protect deletion)
+                row.linked_count =
+                    row.members_count + row.activities_count + row.orders_count;
+
                 row.status_badge = STATUS_BADGES[row.status_name] || 'bg-secondary';
             });
 
@@ -419,6 +423,70 @@ router.put('/:id', (req, res) => {
             renderRow(res, req.params.id);
         }
     );
+});
+
+
+// DELETE: Only remove projects without members, activities or purchase orders
+router.delete('/:id', (req, res) => {
+
+    // Step 1: Check what is linked to this project
+    queryProjects(' WHERE p.project_id = ?', [req.params.id], (err, data) => {
+
+        if (err) {
+            console.error('Error checking project relationships:', err);
+            return sendError(res, 500, 'Unable to check project relationships.');
+        }
+
+        if (data.length === 0) {
+            return sendError(res, 404, 'Project not found.');
+        }
+
+        // Step 2: Reject deletion if the project already has linked records
+        if (data[0].linked_count > 0) {
+            return sendError(
+                res,
+                409,
+                'This project has ' + data[0].members_count + ' members, ' +
+                data[0].activities_count + ' activities and ' +
+                data[0].orders_count + ' purchase orders. ' +
+                'Please change its status to Cancelled instead.'
+            );
+        }
+
+        // Step 3: Delete the project
+        const deleteSQL = `
+            DELETE FROM projects
+            WHERE project_id = ?
+        `;
+
+        router.connection.execute(deleteSQL, [req.params.id], (err, result) => {
+
+            if (err) {
+                console.error('Error deleting project:', err);
+
+                // Additional database foreign key protection
+                if (
+                    err.code === 'ER_ROW_IS_REFERENCED_2' ||
+                    err.code === 'ER_ROW_IS_REFERENCED'
+                ) {
+                    return sendError(
+                        res,
+                        409,
+                        'This project is referenced by other records. Please change its status to Cancelled instead.'
+                    );
+                }
+
+                return sendError(res, 500, 'Unable to delete project.');
+            }
+
+            if (result.affectedRows === 0) {
+                return sendError(res, 404, 'Project not found.');
+            }
+
+            // Step 4: Empty response removes the row from the table
+            res.send('');
+        });
+    });
 });
 
 module.exports = router;

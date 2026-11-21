@@ -39,6 +39,30 @@
             <i class="bi bi-pencil-square me-1"></i>
             Edit
         </button>
+
+        <!-- Delete Project -->
+        {{#if linked_count}}
+
+        <!-- Deletion disabled: project already has members, activities or purchase orders -->
+        <button type="button" class="btn btn-secondary btn-sm ms-2" disabled
+            title="Cannot delete: this project has {{members_count}} members, {{activities_count}} activities and {{orders_count}} purchase orders. Change its status to Cancelled instead.">
+
+            <i class="bi bi-lock me-1"></i>
+            Delete
+        </button>
+
+        {{else}}
+
+        <!-- Deletion allowed: nothing is linked to this project yet -->
+        <button type="button" class="btn btn-danger btn-sm ms-2" hx-delete="/projects/{{project_id}}"
+            hx-target="closest tr" hx-swap="outerHTML"
+            hx-confirm="This project has no members, activities or purchase orders. Are you sure you want to permanently delete it?">
+
+            <i class="bi bi-trash3 me-1"></i>
+            Delete
+        </button>
+
+        {{/if}}
     </td>
 
 </tr>
