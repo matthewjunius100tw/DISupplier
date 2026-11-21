@@ -89,7 +89,7 @@
         <div class="col-md-8">
 
             <input id="material-search" type="search" name="q" class="form-control"
-                placeholder="Search by material name or ID..." hx-get="/materials/list" hx-trigger="input delay:300ms"
+                placeholder="Search by material name or ID..." hx-get="/materials/list" hx-trigger="input delay:300ms, material-deleted from:body"
                 hx-target="#material-results" hx-swap="outerHTML"
                 hx-include="#material-category-filter, #material-page-size">
 
