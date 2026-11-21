@@ -1,0 +1,112 @@
+<div class="mt-4">
+
+    <h2 class="mb-3">
+        <i class="bi bi-truck me-2"></i>
+        Supplier Management
+    </h2>
+
+    <!-- Server messages -->
+    <div id="supplier-message"></div>
+
+    <!-- Add Supplier -->
+    <div class="card mb-4">
+
+        <div class="card-header">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add New Supplier
+        </div>
+
+        <div class="card-body">
+
+
+            <form hx-post="/suppliers" hx-swap="none" hx-on::before:request="
+          const button = this.querySelector('button[type=submit]');
+          button.disabled = true;
+          button.innerHTML = '<span class=&quot;spinner-border spinner-border-sm me-2&quot;></span>Adding...';
+      " hx-on::after:request="
+          if (ctx.response.status >= 200 && ctx.response.status < 300) {
+              this.reset();
+
+              document.getElementById('supplier-message').innerHTML =
+                  '<div class=&quot;alert alert-success py-2&quot; role=&quot;status&quot;>' +
+                  '<i class=&quot;bi bi-check-circle me-2&quot;></i>' +
+                  'Supplier added successfully!' +
+                  '</div>';
+
+              document.getElementById('supplier-search')
+                  .dispatchEvent(new Event('supplier-refresh', { bubbles: true }));
+          }
+      " hx-on::finally:request="
+          const button = this.querySelector('button[type=submit]');
+          button.disabled = false;
+          button.innerHTML = '<i class=&quot;bi bi-plus-lg me-1&quot;></i>Add Supplier';
+      ">
+
+
+                <div class="row g-3">
+
+                    <!-- Supplier Name -->
+                    <div class="col-md-4">
+                        <label class="form-label">Supplier Name</label>
+                        <input type="text" name="supplier_name" class="form-control" maxlength="150"
+                            placeholder="Enter supplier name" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-4">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" maxlength="255"
+                            placeholder="supplier@example.com" required>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-4">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" maxlength="30"
+                            placeholder="Enter phone number" required>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-6">
+                        <label class="form-label">Address</label>
+                        <textarea name="address" class="form-control" rows="2" placeholder="Enter supplier address"
+                            required></textarea>
+                    </div>
+
+                    <!-- Website -->
+                    <div class="col-md-4">
+                        <label class="form-label">Website (Optional)</label>
+                        <input type="url" name="website" class="form-control" maxlength="255"
+                            placeholder="https://example.com">
+                    </div>
+
+                    <!-- Add Button -->
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Add Supplier
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Search -->
+    <div class="row g-2 mb-3">
+
+        <div class="col-md-8">
+            <input id="supplier-search" type="search" name="q" class="form-control"
+                placeholder="Search by supplier name or ID..." hx-get="/suppliers/list" hx-trigger="input delay:300ms, supplier-refresh, supplier-deleted from:body"
+                hx-target="#supplier-results" hx-swap="outerHTML" hx-include="#supplier-page-size">
+        </div>
+
+    </div>
+
+    <!-- Supplier table and pagination -->
+    {{> suppliers/results}}
+
+</div>

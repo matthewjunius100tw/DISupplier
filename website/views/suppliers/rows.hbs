@@ -1,0 +1,15 @@
+{{#each data}}
+
+{{> suppliers/row}}
+
+{{else}}
+
+<tbody>
+    <tr>
+        <td colspan="5" class="text-center text-muted py-4">
+            No suppliers found.
+        </td>
+    </tr>
+</tbody>
+
+{{/each}}

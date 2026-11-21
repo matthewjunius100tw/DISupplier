@@ -1,0 +1,76 @@
+<tbody id="supplier-{{supplier_id}}">
+
+    <tr class="align-middle">
+
+        <td colspan="5">
+
+            <form hx-put="/suppliers/{{supplier_id}}" hx-target="closest tbody" hx-swap="outerHTML">
+
+                <div class="row g-3 align-items-end">
+
+                    <!-- Supplier ID -->
+                    <div class="col-md-2">
+                        <label class="form-label">Supplier ID</label>
+                        <input type="text" class="form-control" value="{{supplier_id}}" disabled>
+                    </div>
+
+                    <!-- Supplier Name -->
+                    <div class="col-md-4">
+                        <label class="form-label">Supplier Name</label>
+                        <input type="text" name="supplier_name" class="form-control" value="{{supplier_name}}"
+                            maxlength="150" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" value="{{email}}" maxlength="255"
+                            required>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" value="{{phone}}" maxlength="30" required>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-6">
+                        <label class="form-label">Address</label>
+                        <textarea name="address" class="form-control" rows="2" required>{{address}}</textarea>
+                    </div>
+
+                    <!-- Website -->
+                    <div class="col-md-6">
+                        <label class="form-label">Website (Optional)</label>
+                        <input type="url" name="website" class="form-control" value="{{website}}" maxlength="255"
+                            placeholder="https://example.com">
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="col-12">
+
+                        <button type="submit" class="btn btn-primary btn-sm">
+
+                            <i class="bi bi-check-lg me-1"></i>
+                            Save
+                        </button>
+
+                        <button type="button" class="btn btn-secondary btn-sm ms-2"
+                            hx-get="/suppliers/{{supplier_id}}/row" hx-target="closest tbody" hx-swap="outerHTML">
+
+                            <i class="bi bi-x-lg me-1"></i>
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </td>
+
+    </tr>
+
+</tbody>

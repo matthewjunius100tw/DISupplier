@@ -1,0 +1,108 @@
+<div id="supplier-results">
+
+    <!-- Page Size and Total Results -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <div class="d-flex align-items-center gap-2">
+
+            <label for="supplier-page-size" class="form-label mb-0">
+                Show
+            </label>
+
+            <select id="supplier-page-size" name="page_size" class="form-select form-select-sm" style="width: 90px;"
+                hx-get="/suppliers/list" hx-trigger="change" hx-target="#supplier-results" hx-swap="outerHTML"
+                hx-include="#supplier-search">
+
+                {{#each pageSizeOptions}}
+                <option value="{{value}}" {{#if selected}}selected{{/if}}>
+                    {{value}}
+                </option>
+                {{/each}}
+
+            </select>
+
+            <span>per page</span>
+        </div>
+
+        <span class="text-muted">
+            Total: {{total}} suppliers
+        </span>
+
+    </div>
+
+    <!-- Supplier Table -->
+    <div class="table-responsive">
+
+        <table class="table table-striped table-hover align-middle">
+
+            <thead class="table-light">
+                <tr>
+                    <th>Supplier ID</th>
+                    <th>Supplier Name</th>
+                    <th>Used In</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            {{> suppliers/rows}}
+
+        </table>
+
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
+
+        <!-- Results Information -->
+        <div class="text-muted small">
+            Showing {{startRecord}}–{{endRecord}} of {{total}} suppliers
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Supplier pagination">
+
+            <div class="d-flex align-items-center gap-1">
+
+                <!-- Previous -->
+                <button type="button" class="btn btn-outline-secondary btn-sm" title="Previous page" {{#unless
+                    hasPrevious}}disabled{{/unless}} hx-get="/suppliers/list?page={{previousPage}}"
+                    hx-include="#supplier-search, #supplier-page-size" hx-target="#supplier-results"
+                    hx-swap="outerHTML">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+
+                <!-- Page Numbers -->
+                {{#each pages}}
+
+                {{#if ellipsis}}
+
+                <span class="px-2 text-muted">...</span>
+
+                {{else}}
+
+                <button type="button" class="btn btn-sm {{#if active}}btn-primary{{else}}btn-outline-secondary{{/if}}"
+                    style="min-width: 34px;" {{#if active}}disabled{{/if}} hx-get="/suppliers/list?page={{number}}"
+                    hx-include="#supplier-search, #supplier-page-size" hx-target="#supplier-results"
+                    hx-swap="outerHTML">
+                    {{number}}
+                </button>
+
+                {{/if}}
+
+                {{/each}}
+
+                <!-- Next -->
+                <button type="button" class="btn btn-outline-secondary btn-sm" title="Next page" {{#unless
+                    hasNext}}disabled{{/unless}} hx-get="/suppliers/list?page={{nextPage}}"
+                    hx-include="#supplier-search, #supplier-page-size" hx-target="#supplier-results"
+                    hx-swap="outerHTML">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+            </div>
+        </nav>
+
+    </div>
+
+</div>
