@@ -495,7 +495,32 @@ router.get('/:id/details', (req, res) => {
                 );
             }
 
-            res.render('projects/details', data[0]);
+
+            // Determine the selected tab from the URL
+            const validTabs = [
+                'overview',
+                'activities',
+                'members',
+                'materials',
+                'orders'
+            ];
+
+            const requestedTab = req.query.tab;
+
+            const activeTab = validTabs.includes(requestedTab)
+                ? requestedTab
+                : 'overview';
+
+            // Render the project with the correct active tab
+            res.render('projects/details', {
+                ...data[0],
+                tab_overview: activeTab === 'overview',
+                tab_activities: activeTab === 'activities',
+                tab_members: activeTab === 'members',
+                tab_materials: activeTab === 'materials',
+                tab_orders: activeTab === 'orders'
+            });
+
         }
     );
 });

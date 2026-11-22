@@ -99,6 +99,15 @@ const projects = require('./routes/projects');
 // Share the database connection with the router
 projects.connection = connection;
 
+// Project Activities Management
+const projectActivities = require('./routes/project-activities');
+
+// Share the database connection with the router
+projectActivities.connection = connection;
+
+// Register Project Activities routes
+app.use('/projects/:projectId/activities', projectActivities);
+
 // Register Projects routes
 app.use('/projects', projects);
 
