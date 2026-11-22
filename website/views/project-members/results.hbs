@@ -1,0 +1,300 @@
+<!-- Project Members Results -->
+
+<div class="border rounded overflow-hidden mb-3">
+
+    <!-- Header -->
+    <div class="row g-0 align-items-center bg-light border-bottom py-2 px-3 d-none d-lg-flex">
+
+        <div class="col-lg-2 fw-semibold small">
+            Employee
+        </div>
+
+        <div class="col-lg-2 text-center fw-semibold small">
+            Role
+        </div>
+
+        <div class="col-lg-3 fw-semibold small">
+            Email
+        </div>
+
+        <div class="col-lg-2 text-center fw-semibold small">
+            Assigned Date
+        </div>
+
+        <div class="col-lg-1 text-center fw-semibold small">
+            Activities
+        </div>
+
+        <div class="col-lg-2 text-center fw-semibold small">
+            Actions
+        </div>
+
+    </div>
+
+    {{#each members}}
+
+    <div class="border-bottom px-3 py-3">
+
+        <div class="row g-2 align-items-center">
+
+
+            <!-- Employee -->
+            <div class="col-12 col-lg-2">
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <!-- Expand / Collapse Button -->
+                    <button type="button" class="btn btn-sm btn-outline-secondary member-expand-btn"
+                        data-bs-toggle="collapse" data-bs-target="#member-details-{{project_member_id}}"
+                        aria-expanded="false" aria-controls="member-details-{{project_member_id}}"
+                        title="Show Member Details">
+
+                        <i class="bi bi-chevron-down"></i>
+
+                    </button>
+
+                    <!-- Employee Name -->
+                    <div>
+
+                        <div class="fw-semibold">
+                            {{member_name}}
+                        </div>
+
+                        {{#unless is_active}}
+                        <span class="badge bg-secondary">
+                            Inactive
+                        </span>
+                        {{/unless}}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Role -->
+            <div class="col-6 col-lg-2 text-lg-center">
+
+                <span class="d-lg-none text-muted small d-block">
+                    Role
+                </span>
+
+                {{role_name}}
+            </div>
+
+            <!-- Email -->
+            <div class="col-12 col-lg-3">
+
+                <span class="d-lg-none text-muted small d-block">
+                    Email
+                </span>
+
+                <span style="overflow-wrap: anywhere;">
+                    {{email}}
+                </span>
+            </div>
+
+            <!-- Assigned Date -->
+            <div class="col-6 col-lg-2 text-lg-center">
+
+                <span class="d-lg-none text-muted small d-block">
+                    Assigned Date
+                </span>
+
+                {{assigned_date}}
+            </div>
+
+            <!-- Activity Count -->
+            <div class="col-6 col-lg-1 text-lg-center">
+
+                <span class="d-lg-none text-muted small d-block">
+                    Activities
+                </span>
+
+                {{activities_count}}
+            </div>
+
+            <!-- Actions -->
+            <div class="col-12 col-lg-2">
+
+                <div class="d-flex justify-content-lg-center mt-2 mt-lg-0">
+
+                    {{#if hasActivities}}
+
+                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled
+                        title="Reassign or unassign this member's activities before removal">
+
+                        <i class="bi bi-lock me-1"></i>
+                        Remove
+                    </button>
+
+                    {{else}}
+
+                    <button type="button" class="btn btn-sm btn-outline-danger"
+                        hx-delete="/projects/{{project_id}}/members/{{project_member_id}}"
+                        hx-confirm="Remove this employee from the selected project?" hx-target="#member-message"
+                        hx-swap="innerHTML" hx-disabled-elt="this">
+
+                        <i class="bi bi-trash me-1"></i>
+                        Remove
+                    </button>
+
+                    {{/if}}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Expandable Member Details -->
+        <div class="collapse mt-3" id="member-details-{{project_member_id}}">
+
+            <div class="bg-light rounded p-3 small">
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <strong>Full Name:</strong>
+                        {{member_name}} {{last_name}}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Role:</strong>
+                        {{role_name}}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Email:</strong>
+                        <span style="overflow-wrap: anywhere;">
+                            {{email}}
+                        </span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Phone:</strong>
+                        {{#if phone}}
+                        {{phone}}
+                        {{else}}
+                        Not provided
+                        {{/if}}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Status:</strong>
+                        {{#if is_active}}
+                        Active
+                        {{else}}
+                        Inactive
+                        {{/if}}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Assigned Activities:</strong>
+                        {{activities_count}}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    {{else}}
+
+    <div class="text-center text-muted py-4">
+        <i class="bi bi-people me-2"></i>
+        No project members found.
+    </div>
+
+    {{/each}}
+
+</div>
+
+<!-- Pagination -->
+{{#if showPagination}}
+
+<div class="d-flex justify-content-center mb-3">
+
+    <nav aria-label="Project Members pagination">
+
+        <ul class="pagination pagination-sm mb-0 flex-wrap justify-content-center">
+
+            <li class="page-item {{#unless hasPrevious}}disabled{{/unless}}">
+                {{#if hasPrevious}}
+                <button type="button" class="page-link" hx-get="{{firstUrl}}" hx-target="#member-results"
+                    hx-swap="innerHTML">
+                    First
+                </button>
+                {{else}}
+                <span class="page-link">First</span>
+                {{/if}}
+            </li>
+
+            <li class="page-item {{#unless hasPrevious}}disabled{{/unless}}">
+                {{#if hasPrevious}}
+                <button type="button" class="page-link" hx-get="{{previousUrl}}" hx-target="#member-results"
+                    hx-swap="innerHTML">
+                    Previous
+                </button>
+                {{else}}
+                <span class="page-link">Previous</span>
+                {{/if}}
+            </li>
+
+            {{#each pages}}
+
+            <li class="page-item {{#if active}}active{{/if}}">
+                {{#if active}}
+                <span class="page-link" aria-current="page">
+                    {{number}}
+                </span>
+                {{else}}
+                <button type="button" class="page-link" hx-get="{{url}}" hx-target="#member-results"
+                    hx-swap="innerHTML">
+                    {{number}}
+                </button>
+                {{/if}}
+            </li>
+
+            {{/each}}
+
+            <li class="page-item {{#unless hasNext}}disabled{{/unless}}">
+                {{#if hasNext}}
+                <button type="button" class="page-link" hx-get="{{nextUrl}}" hx-target="#member-results"
+                    hx-swap="innerHTML">
+                    Next
+                </button>
+                {{else}}
+                <span class="page-link">Next</span>
+                {{/if}}
+            </li>
+
+            <li class="page-item {{#unless hasNext}}disabled{{/unless}}">
+                {{#if hasNext}}
+                <button type="button" class="page-link" hx-get="{{lastUrl}}" hx-target="#member-results"
+                    hx-swap="innerHTML">
+                    Last
+                </button>
+                {{else}}
+                <span class="page-link">Last</span>
+                {{/if}}
+            </li>
+
+        </ul>
+
+    </nav>
+
+</div>
+
+{{/if}}
+
+<!-- Record Count -->
+<div class="text-muted small text-end">
+    Showing {{startRecord}}–{{endRecord}} of {{total}} members
+</div>

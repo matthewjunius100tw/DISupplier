@@ -108,6 +108,15 @@ projectActivities.connection = connection;
 // Register Project Activities routes
 app.use('/projects/:projectId/activities', projectActivities);
 
+// Project Members Management
+const projectMembers = require('./routes/project-members');
+
+// Share the database connection
+projectMembers.connection = connection;
+
+// Register project-specific member routes
+app.use('/projects/:projectId/members', projectMembers);
+
 // Register Projects routes
 app.use('/projects', projects);
 
