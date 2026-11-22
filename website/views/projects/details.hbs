@@ -2,7 +2,7 @@
 
     <!-- Back to Projects -->
     <button type="button" class="btn btn-outline-secondary btn-sm mb-4" hx-get="/projects" hx-target="#main"
-        hx-swap="innerHTML">
+        hx-swap="innerHTML" hx-push-url="true">
 
         <i class="bi bi-arrow-left me-1"></i>
         Back to Projects
@@ -54,56 +54,59 @@
             <!-- Project Navigation Tabs -->
             <ul class="nav nav-tabs card-header-tabs" id="project-detail-tabs" role="tablist">
 
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="project-overview-tab" data-bs-toggle="tab"
-                        data-bs-target="#project-overview" type="button" role="tab" aria-controls="project-overview"
-                        aria-selected="true">
 
+                <!-- Overview -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {{#if tab_overview}}active{{/if}}" id="project-overview-tab"
+                        data-bs-toggle="tab" data-bs-target="#project-overview" type="button" role="tab"
+                        aria-controls="project-overview" aria-selected="{{#if tab_overview}}true{{else}}false{{/if}}">
                         <i class="bi bi-grid me-1"></i>
                         Overview
                     </button>
                 </li>
 
+                <!-- Activities -->
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="project-activities-tab" data-bs-toggle="tab"
-                        data-bs-target="#project-activities" type="button" role="tab" aria-controls="project-activities"
-                        aria-selected="false">
-
+                    <button class="nav-link {{#if tab_activities}}active{{/if}}" id="project-activities-tab"
+                        data-bs-toggle="tab" data-bs-target="#project-activities" type="button" role="tab"
+                        aria-controls="project-activities"
+                        aria-selected="{{#if tab_activities}}true{{else}}false{{/if}}"
+                        hx-get="/projects/{{project_id}}/activities" hx-target="#project-activities-content"
+                        hx-swap="innerHTML" hx-trigger="click">
                         <i class="bi bi-list-check me-1"></i>
                         Activities
                     </button>
                 </li>
 
+                <!-- Members -->
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="project-members-tab" data-bs-toggle="tab"
-                        data-bs-target="#project-members" type="button" role="tab" aria-controls="project-members"
-                        aria-selected="false">
-
+                    <button class="nav-link {{#if tab_members}}active{{/if}}" id="project-members-tab"
+                        data-bs-toggle="tab" data-bs-target="#project-members" type="button" role="tab"
+                        aria-controls="project-members" aria-selected="{{#if tab_members}}true{{else}}false{{/if}}">
                         <i class="bi bi-people me-1"></i>
                         Members
                     </button>
                 </li>
 
+                <!-- Materials -->
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="project-materials-tab" data-bs-toggle="tab"
-                        data-bs-target="#project-materials" type="button" role="tab" aria-controls="project-materials"
-                        aria-selected="false">
-
+                    <button class="nav-link {{#if tab_materials}}active{{/if}}" id="project-materials-tab"
+                        data-bs-toggle="tab" data-bs-target="#project-materials" type="button" role="tab"
+                        aria-controls="project-materials" aria-selected="{{#if tab_materials}}true{{else}}false{{/if}}">
                         <i class="bi bi-box-seam me-1"></i>
                         Materials
                     </button>
                 </li>
 
+                <!-- Purchase Orders -->
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="project-orders-tab" data-bs-toggle="tab"
-                        data-bs-target="#project-orders" type="button" role="tab" aria-controls="project-orders"
-                        aria-selected="false">
-
+                    <button class="nav-link {{#if tab_orders}}active{{/if}}" id="project-orders-tab"
+                        data-bs-toggle="tab" data-bs-target="#project-orders" type="button" role="tab"
+                        aria-controls="project-orders" aria-selected="{{#if tab_orders}}true{{else}}false{{/if}}">
                         <i class="bi bi-cart me-1"></i>
                         Purchase Orders
                     </button>
                 </li>
-
             </ul>
 
         </div>
@@ -113,7 +116,8 @@
             <div class="tab-content" id="project-detail-content">
 
                 <!-- OVERVIEW -->
-                <div class="tab-pane fade show active" id="project-overview" role="tabpanel"
+
+                <div class="tab-pane fade {{#if tab_overview}}show active{{/if}}" id="project-overview" role="tabpanel"
                     aria-labelledby="project-overview-tab">
 
                     <h5 class="mb-3">Project Overview</h5>
@@ -128,7 +132,13 @@
                                         <i class="bi bi-list-check me-1"></i>
                                         Project Activities
                                     </div>
-                                    <h3 class="mb-0">{{activities_count}}</h3>
+                                    <h3 class="mb-0" id="project-activities-count"
+                                        hx-get="/projects/{{project_id}}/activities/count"
+                                        hx-trigger="activity-changed from:body" hx-swap="innerHTML">
+
+                                        {{activities_count}}
+
+                                    </h3>
                                 </div>
                             </div>
                         </div>
@@ -234,27 +244,29 @@
 
                 </div>
 
+
                 <!-- ACTIVITIES -->
-                <div class="tab-pane fade" id="project-activities" role="tabpanel"
-                    aria-labelledby="project-activities-tab">
 
-                    <h5>Project Activities</h5>
+                <div class="tab-pane fade {{#if tab_activities}}show active{{/if}}" id="project-activities"
+                    role="tabpanel" aria-labelledby="project-activities-tab">
 
-                    <p class="text-muted">
-                        Manage construction activities, schedules,
-                        and activity progress for this project.
-                    </p>
+                    <div id="project-activities-content" {{#if tab_activities}}
+                        hx-get="/projects/{{project_id}}/activities" hx-trigger="load" hx-swap="innerHTML" {{/if}}>
 
-                    <div class="alert alert-light border">
-                        <i class="bi bi-info-circle me-2"></i>
-                        Project Activities Management will be
-                        developed in the next phase.
+                        <div class="text-center text-muted py-4">
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            Select Activities to load project activities.
+                        </div>
+
                     </div>
 
                 </div>
 
+
                 <!-- MEMBERS -->
-                <div class="tab-pane fade" id="project-members" role="tabpanel" aria-labelledby="project-members-tab">
+
+                <div class="tab-pane fade {{#if tab_members}}show active{{/if}}" id="project-members" role="tabpanel"
+                    aria-labelledby="project-members-tab">
 
                     <h5>Project Members</h5>
 
@@ -272,8 +284,10 @@
                 </div>
 
                 <!-- MATERIALS -->
-                <div class="tab-pane fade" id="project-materials" role="tabpanel"
-                    aria-labelledby="project-materials-tab">
+
+                <div class="tab-pane fade {{#if tab_materials}}show active{{/if}}" id="project-materials"
+                    role="tabpanel" aria-labelledby="project-materials-tab">
+
 
                     <h5>Project Material Requirements</h5>
 
@@ -291,7 +305,9 @@
                 </div>
 
                 <!-- PURCHASE ORDERS -->
-                <div class="tab-pane fade" id="project-orders" role="tabpanel" aria-labelledby="project-orders-tab">
+
+                <div class="tab-pane fade {{#if tab_orders}}show active{{/if}}" id="project-orders" role="tabpanel"
+                    aria-labelledby="project-orders-tab">
 
                     <h5>Project Purchase Orders</h5>
 

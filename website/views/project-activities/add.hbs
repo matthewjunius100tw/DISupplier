@@ -1,0 +1,159 @@
+<div class="card border mb-4">
+
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+
+        <h6 class="mb-0">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add New Activity
+        </h6>
+
+        <button type="button" class="btn-close" aria-label="Close"
+            onclick="document.getElementById('activity-form-container').innerHTML = '';">
+        </button>
+
+    </div>
+
+    <div class="card-body">
+
+        {{#if error}}
+
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{error}}
+        </div>
+
+        {{/if}}
+
+        <form hx-post="/projects/{{project_id}}/activities" hx-target="#activity-form-container" hx-swap="innerHTML">
+
+            <div class="row g-3">
+
+                <!-- Activity Name -->
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Activity Name
+                        <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text" class="form-control" name="activity_name" value="{{activity_name}}"
+                        maxlength="150" required placeholder="Enter activity name">
+
+                </div>
+
+                <!-- Description -->
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Description
+                    </label>
+
+                    <textarea class="form-control" name="description" rows="3"
+                        style="resize: vertical; min-height: 90px;"
+                        placeholder="Enter activity description">{{description}}</textarea>
+
+                </div>
+
+                <!-- Assigned Project Member -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Assigned To
+                    </label>
+
+                    <select class="form-select" name="assigned_to">
+
+                        <option value="">
+                            Unassigned
+                        </option>
+
+                        {{#each members}}
+
+                        <option value="{{user_id}}" {{#if selected}}selected{{/if}}>
+                            {{member_name}}
+                        </option>
+
+                        {{/each}}
+
+                    </select>
+
+                    {{#unless hasMembers}}
+
+                    <div class="form-text text-warning">
+                        No eligible active project members available.
+                    </div>
+
+                    {{/unless}}
+
+                </div>
+
+                <!-- Activity Status -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Activity Status
+                        <span class="text-danger">*</span>
+                    </label>
+
+                    <select class="form-select" name="status_id" required>
+
+                        {{#each statuses}}
+
+                        <option value="{{status_id}}" {{#if selected}}selected{{/if}}>
+                            {{status_name}}
+                        </option>
+
+                        {{/each}}
+
+                    </select>
+
+                </div>
+
+                <!-- Start Date -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Start Date
+                    </label>
+
+                    <input type="text" class="form-control project-date-picker" name="start_date" value="{{start_date}}"
+                        placeholder="Select start date" autocomplete="off">
+
+                </div>
+
+                <!-- End Date -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        End Date
+                    </label>
+
+                    <input type="text" class="form-control project-date-picker" name="end_date" value="{{end_date}}"
+                        placeholder="Select end date" autocomplete="off">
+
+                </div>
+
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <button type="button" class="btn btn-outline-secondary"
+                    onclick="document.getElementById('activity-form-container').innerHTML = '';">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+
+                    <i class="bi bi-check-circle me-1"></i>
+                    Save Activity
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
