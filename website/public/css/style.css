@@ -115,3 +115,24 @@ body {
         justify-content: center;
     }
 }
+
+
+/* Project Members - Expandable Details Button */
+
+.member-expand-btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.member-expand-btn i {
+    transition: transform 0.2s ease;
+}
+
+.member-expand-btn[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}

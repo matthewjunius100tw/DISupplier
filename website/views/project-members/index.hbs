@@ -1,0 +1,89 @@
+<div class="project-members-management">
+
+    <!-- Section Header -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+
+        <div>
+            <h5 class="mb-1">Project Members</h5>
+            <p class="text-muted mb-0">
+                Manage employees assigned to this project.
+            </p>
+        </div>
+
+        <button type="button" class="btn btn-primary" hx-get="/projects/{{project_id}}/members/new"
+            hx-target="#member-form-container" hx-swap="innerHTML">
+
+            <i class="bi bi-plus-lg me-1"></i>
+            Add Member
+        </button>
+
+    </div>
+
+    <!-- Add Form -->
+    <div id="member-form-container"></div>
+
+    <!-- Member Notifications -->
+    <div id="member-message"></div>
+
+    <!-- Search and Filters -->
+    <form id="member-filter-form" class="row g-2 align-items-end mb-3" hx-get="/projects/{{project_id}}/members/list"
+        hx-target="#member-results" hx-swap="innerHTML"
+        hx-trigger="input changed delay:350ms from:input[name='q'], change from:select">
+
+        <!-- Search -->
+        <div class="col-md-6">
+            <label class="form-label small mb-1">
+                Search Members
+            </label>
+
+            <input type="search" class="form-control" name="q" value="{{q}}"
+                placeholder="Search by employee name or email..." autocomplete="off">
+        </div>
+
+        <!-- Role Filter -->
+        <div class="col-md-4">
+            <label class="form-label small mb-1">
+                Employee Role
+            </label>
+
+            <select class="form-select" name="role_id">
+
+                <option value="">All Roles</option>
+
+                {{#each roles}}
+                <option value="{{role_id}}" {{#if selected}}selected{{/if}}>
+                    {{role_name}}
+                </option>
+                {{/each}}
+
+            </select>
+        </div>
+
+        <!-- Page Size -->
+        <div class="col-md-2">
+            <label class="form-label small mb-1">
+                Show Entries
+            </label>
+
+            <select class="form-select" name="page_size">
+
+                {{#each pageSizeOptions}}
+                <option value="{{value}}" {{#if selected}}selected{{/if}}>
+                    {{value}}
+                </option>
+                {{/each}}
+
+            </select>
+        </div>
+
+    </form>
+
+    <!-- HTMX Results -->
+    <div id="member-results" hx-get="/projects/{{project_id}}/members/list" hx-trigger="member-changed from:body"
+        hx-include="#member-filter-form" hx-target="this" hx-swap="innerHTML">
+
+        {{> project-members/results}}
+
+    </div>
+
+</div>
