@@ -1,0 +1,436 @@
+<!-- Project Material Requirements Results -->
+
+<div class="border rounded overflow-hidden mb-3">
+
+    <!-- Column Headers -->
+    <div class="row g-0 align-items-center bg-light border-bottom py-2 px-3 d-none d-lg-flex">
+
+        <div class="col-lg-2 fw-semibold small">
+            Material
+        </div>
+
+        <div class="col-lg-2 fw-semibold small">
+            Activity
+        </div>
+
+        <div class="col-lg-2 text-center fw-semibold small">
+            Required Quantity
+        </div>
+
+        <div class="col-lg-1 text-center fw-semibold small">
+            Unit
+        </div>
+
+        <div class="col-lg-2 text-center fw-semibold small">
+            Required Date
+        </div>
+
+        <div class="col-lg-1 text-center fw-semibold small">
+            PO Status
+        </div>
+
+        <div class="col-lg-2 text-center fw-semibold small">
+            Actions
+        </div>
+
+    </div>
+
+    <!-- Requirement Records -->
+    {{#each requirements}}
+
+    <div class="border-bottom px-3 py-3">
+
+        <div class="row g-2 align-items-center">
+
+            <!-- Material Name -->
+            <div class="col-12 col-lg-2">
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <button type="button" class="btn btn-sm btn-outline-secondary detail-expand-btn"
+                        data-bs-toggle="collapse" data-bs-target="#requirement-details-{{requirement_id}}"
+                        aria-expanded="false" aria-controls="requirement-details-{{requirement_id}}"
+                        aria-label="Toggle requirement details" title="Show Requirement Information">
+
+                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+
+                    </button>
+
+                    <div class="fw-semibold" style="overflow-wrap: anywhere;">
+                        {{material_name}}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Activity -->
+            <div class="col-6 col-lg-2">
+
+                <span class="d-lg-none text-muted small d-block">
+                    Activity
+                </span>
+
+                {{activity_name}}
+
+            </div>
+
+            <!-- Required Quantity -->
+            <div class="col-6 col-lg-2 text-lg-center">
+
+                <span class="d-lg-none text-muted small d-block">
+                    Required Quantity
+                </span>
+
+                {{required_quantity}}
+
+            </div>
+
+            <!-- Unit -->
+            <div class="col-6 col-lg-1 text-lg-center">
+
+                <span class="d-lg-none text-muted small d-block">
+                    Unit
+                </span>
+
+                {{unit}}
+
+            </div>
+
+            <!-- Required Date -->
+            <div class="col-6 col-lg-2 text-lg-center">
+
+                <span class="d-lg-none text-muted small d-block">
+                    Required Date
+                </span>
+
+                {{required_date_display}}
+
+            </div>
+
+            <!-- Procurement Status -->
+            <div class="col-6 col-lg-1 text-lg-center">
+
+                <span class="d-lg-none text-muted small d-block">
+                    PO Status
+                </span>
+
+                {{#if is_linked}}
+
+                <span class="badge bg-success" title="Linked to a purchase order item">
+                    Linked
+                </span>
+
+                {{else}}
+
+                <span class="badge bg-secondary">
+                    Not Linked
+                </span>
+
+                {{/if}}
+
+            </div>
+
+            <!-- Actions -->
+            <div class="col-12 col-lg-2">
+
+                <div class="d-flex justify-content-lg-center gap-2 flex-wrap mt-2 mt-lg-0">
+
+                    {{#if canModify}}
+
+                    <!-- Edit -->
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                        hx-get="/projects/{{../project_id}}/material-requirements/{{requirement_id}}/edit"
+                        hx-target="#requirement-edit-{{requirement_id}}" hx-swap="innerHTML" title="Edit Requirement">
+
+                        <i class="bi bi-pencil-square me-1"></i>
+                        Edit
+
+                    </button>
+
+                    <!-- Delete -->
+                    <button type="button" class="btn btn-sm btn-outline-danger"
+                        hx-delete="/projects/{{../project_id}}/material-requirements/{{requirement_id}}"
+                        hx-confirm="Are you sure you want to delete this material requirement?"
+                        hx-target="#requirement-message" hx-swap="innerHTML" hx-disabled-elt="this">
+
+                        <i class="bi bi-trash me-1"></i>
+                        Delete
+
+                    </button>
+
+                    <!-- Procurement Handoff -->
+                    <button type="button" class="btn btn-sm btn-outline-success"
+                        hx-get="/projects/{{../project_id}}/material-requirements/{{requirement_id}}/handoff"
+                        hx-target="#requirement-edit-{{requirement_id}}" hx-swap="innerHTML"
+                        title="Prepare Purchase Order Handoff">
+
+                        <i class="bi bi-cart-plus me-1"></i>
+                        Proceed to PO
+
+                    </button>
+
+                    {{else}}
+
+                    <!-- Locked Editing -->
+                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled
+                        title="Already linked to a purchase order item">
+
+                        <i class="bi bi-lock me-1"></i>
+                        Edit
+
+                    </button>
+
+                    <!-- Locked Deletion -->
+                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled
+                        title="Already linked to a purchase order item">
+
+                        <i class="bi bi-lock me-1"></i>
+                        Delete
+
+                    </button>
+
+                    {{/if}}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Inline Edit / Procurement Preview -->
+        <div id="requirement-edit-{{requirement_id}}" class="mt-3"></div>
+
+        <!-- Expandable Requirement Information -->
+        <div class="collapse mt-3" id="requirement-details-{{requirement_id}}">
+
+            <div class="bg-light rounded p-3">
+
+                <div class="fw-semibold mb-3">
+
+                    <i class="bi bi-info-circle me-2"></i>
+                    Requirement Information
+
+                </div>
+
+                <div class="row g-3 small">
+
+                    <div class="col-md-6">
+
+                        <strong>Material ID:</strong>
+                        {{material_id}}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <strong>Project Activity:</strong>
+                        {{activity_name}}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <strong>Required Quantity:</strong>
+                        {{required_quantity}} {{unit}}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <strong>Required Date:</strong>
+                        {{required_date_display}}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <strong>Linked PO Items:</strong>
+                        {{po_item_count}}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <strong>Material Status:</strong>
+
+                        {{#if material_active}}
+                        Active
+                        {{else}}
+                        Inactive
+                        {{/if}}
+
+                    </div>
+
+                    {{#if specification}}
+
+                    <div class="col-12">
+
+                        <strong>Material Specification:</strong>
+
+                        <div class="mt-1" style="white-space: pre-line; overflow-wrap: anywhere;">
+                            {{specification}}
+                        </div>
+
+                    </div>
+
+                    {{/if}}
+
+                    <div class="col-12">
+
+                        <strong>Requirement Notes:</strong>
+
+                        <div class="mt-1" style="white-space: pre-line; overflow-wrap: anywhere;">
+
+                            {{#if notes}}
+                            {{notes}}
+                            {{else}}
+                            Not provided
+                            {{/if}}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {{else}}
+
+    <div class="text-center text-muted py-4">
+
+        <i class="bi bi-inbox me-2"></i>
+        No material requirements found.
+
+    </div>
+
+    {{/each}}
+
+</div>
+
+
+<!-- Pagination -->
+{{#if showPagination}}
+
+<div class="d-flex justify-content-center mb-3">
+
+    <nav aria-label="Material Requirements pagination">
+
+        <ul class="pagination pagination-sm mb-0 flex-wrap justify-content-center">
+
+            <!-- First -->
+            <li class="page-item {{#unless hasPrevious}}disabled{{/unless}}">
+
+                {{#if hasPrevious}}
+
+                <button type="button" class="page-link" hx-get="{{firstUrl}}" hx-target="#requirement-results"
+                    hx-swap="innerHTML">
+                    First
+                </button>
+
+                {{else}}
+
+                <span class="page-link">First</span>
+
+                {{/if}}
+
+            </li>
+
+            <!-- Previous -->
+            <li class="page-item {{#unless hasPrevious}}disabled{{/unless}}">
+
+                {{#if hasPrevious}}
+
+                <button type="button" class="page-link" hx-get="{{previousUrl}}" hx-target="#requirement-results"
+                    hx-swap="innerHTML">
+                    Previous
+                </button>
+
+                {{else}}
+
+                <span class="page-link">Previous</span>
+
+                {{/if}}
+
+            </li>
+
+            <!-- Page Numbers -->
+            {{#each pages}}
+
+            <li class="page-item {{#if active}}active{{/if}}">
+
+                {{#if active}}
+
+                <span class="page-link" aria-current="page">
+                    {{number}}
+                </span>
+
+                {{else}}
+
+                <button type="button" class="page-link" hx-get="{{url}}" hx-target="#requirement-results"
+                    hx-swap="innerHTML">
+                    {{number}}
+                </button>
+
+                {{/if}}
+
+            </li>
+
+            {{/each}}
+
+            <!-- Next -->
+            <li class="page-item {{#unless hasNext}}disabled{{/unless}}">
+
+                {{#if hasNext}}
+
+                <button type="button" class="page-link" hx-get="{{nextUrl}}" hx-target="#requirement-results"
+                    hx-swap="innerHTML">
+                    Next
+                </button>
+
+                {{else}}
+
+                <span class="page-link">Next</span>
+
+                {{/if}}
+
+            </li>
+
+            <!-- Last -->
+            <li class="page-item {{#unless hasNext}}disabled{{/unless}}">
+
+                {{#if hasNext}}
+
+                <button type="button" class="page-link" hx-get="{{lastUrl}}" hx-target="#requirement-results"
+                    hx-swap="innerHTML">
+                    Last
+                </button>
+
+                {{else}}
+
+                <span class="page-link">Last</span>
+
+                {{/if}}
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+</div>
+
+{{/if}}
+
+
+<!-- Record Count -->
+<div class="text-muted small text-end">
+
+    Showing {{startRecord}}–{{endRecord}} of {{total}} requirements
+
+</div>

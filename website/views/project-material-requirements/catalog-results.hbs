@@ -1,0 +1,32 @@
+{{#if minimumSearch}}
+
+<div class="text-muted small py-2">
+    Enter at least two characters to search.
+</div>
+
+{{else}}
+
+{{#each materials}}
+
+<button type="button" class="btn btn-outline-secondary btn-sm w-100 text-start mb-1 requirement-material-option"
+    data-material-id="{{material_id}}" data-material-name="{{material_name}}" data-material-unit="{{unit}}">
+
+    <div class="fw-semibold">
+        {{material_name}}
+    </div>
+
+    <div class="small text-muted">
+        ID: {{material_id}} | Unit: {{unit}}
+    </div>
+
+</button>
+
+{{else}}
+
+<div class="text-muted small py-2">
+    No matching active materials found.
+</div>
+
+{{/each}}
+
+{{/if}}
