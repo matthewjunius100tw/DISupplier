@@ -116,10 +116,7 @@ body {
     }
 }
 
-
-/* Project Members - Expandable Details Button */
-
-.member-expand-btn {
+.detail-expand-btn {
     width: 30px;
     height: 30px;
     padding: 0;
@@ -129,10 +126,19 @@ body {
     flex-shrink: 0;
 }
 
-.member-expand-btn i {
+/* Smooth arrow rotation */
+.detail-expand-btn i {
+    display: inline-block;
     transition: transform 0.2s ease;
 }
 
-.member-expand-btn[aria-expanded="true"] i {
+/* Rotate arrow when details are expanded */
+.detail-expand-btn[aria-expanded="true"] i {
     transform: rotate(180deg);
+}
+
+/* Keyboard focus accessibility */
+.detail-expand-btn:focus-visible {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
 }
