@@ -80,9 +80,12 @@
 
                 <!-- Members -->
                 <li class="nav-item" role="presentation">
+
                     <button class="nav-link {{#if tab_members}}active{{/if}}" id="project-members-tab"
                         data-bs-toggle="tab" data-bs-target="#project-members" type="button" role="tab"
-                        aria-controls="project-members" aria-selected="{{#if tab_members}}true{{else}}false{{/if}}">
+                        aria-controls="project-members" aria-selected="{{#if tab_members}}true{{else}}false{{/if}}"
+                        hx-get="/projects/{{project_id}}/members" hx-target="#project-members-content"
+                        hx-swap="innerHTML" hx-trigger="click">
                         <i class="bi bi-people me-1"></i>
                         Members
                     </button>
@@ -92,7 +95,9 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {{#if tab_materials}}active{{/if}}" id="project-materials-tab"
                         data-bs-toggle="tab" data-bs-target="#project-materials" type="button" role="tab"
-                        aria-controls="project-materials" aria-selected="{{#if tab_materials}}true{{else}}false{{/if}}">
+                        aria-controls="project-materials" aria-selected="{{#if tab_materials}}true{{else}}false{{/if}}"
+                        hx-get="/projects/{{project_id}}/material-requirements" hx-target="#project-materials-content"
+                        hx-swap="innerHTML" hx-trigger="click">
                         <i class="bi bi-box-seam me-1"></i>
                         Materials
                     </button>
@@ -125,7 +130,7 @@
                     <!-- Summary Cards -->
                     <div class="row g-3 mb-4">
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <div class="text-muted small mb-2">
@@ -143,7 +148,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <div class="text-muted small mb-2">
@@ -161,7 +166,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <div class="text-muted small mb-2">
@@ -171,6 +176,31 @@
                                     <h3 class="mb-0">{{orders_count}}</h3>
                                 </div>
                             </div>
+                        </div>
+
+
+                        <!-- Material Requirements Summary -->
+                        <div class="col-md-3">
+
+                            <div class="card h-100">
+
+                                <div class="card-body">
+
+                                    <div class="text-muted small mb-2">
+                                        <i class="bi bi-box-seam me-1"></i>
+                                        Material Requirements
+                                    </div>
+
+                                    <h3 class="mb-0" id="project-requirements-count"
+                                        hx-get="/projects/{{project_id}}/material-requirements/count"
+                                        hx-trigger="load, requirement-changed from:body" hx-swap="innerHTML">
+                                        —
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
                         </div>
 
                     </div>
@@ -289,24 +319,21 @@
 
                 </div>
 
-
                 <!-- MATERIALS -->
-
                 <div class="tab-pane fade {{#if tab_materials}}show active{{/if}}" id="project-materials"
                     role="tabpanel" aria-labelledby="project-materials-tab">
 
+                    <div id="project-materials-content" hx-get="/projects/{{project_id}}/material-requirements"
+                        hx-trigger="load" hx-swap="innerHTML">
 
-                    <h5>Project Material Requirements</h5>
+                        <div class="text-center text-muted py-4">
 
-                    <p class="text-muted">
-                        Manage materials required for project activities,
-                        including quantities and specifications.
-                    </p>
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
 
-                    <div class="alert alert-light border">
-                        <i class="bi bi-info-circle me-2"></i>
-                        Project Material Requirements Management
-                        will be developed in the next phase.
+                            Loading material requirements...
+
+                        </div>
+
                     </div>
 
                 </div>

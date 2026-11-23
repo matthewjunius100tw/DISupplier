@@ -1,0 +1,200 @@
+<div class="card border mb-4">
+
+    <!-- Form Header -->
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+
+        <h6 class="mb-0">
+
+            {{#if isEdit}}
+
+            <i class="bi bi-pencil-square me-2"></i>
+            Edit Material Requirement
+
+            {{else}}
+
+            <i class="bi bi-plus-circle me-2"></i>
+            Add Material Requirement
+
+            {{/if}}
+
+        </h6>
+
+        <button type="button" class="btn-close" aria-label="Close" data-requirement-close>
+        </button>
+
+    </div>
+
+    <div class="card-body">
+
+        {{#if error}}
+
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{error}}
+        </div>
+
+        {{/if}}
+
+        <form class="requirement-form" {{#if isEdit}}
+            hx-put="/projects/{{project_id}}/material-requirements/{{requirement_id}}" {{else}}
+            hx-post="/projects/{{project_id}}/material-requirements" {{/if}} hx-target="#requirement-message"
+            hx-swap="innerHTML" hx-disabled-elt="find button[type='submit']">
+
+            <div class="row g-3">
+
+                <!-- Project Activity -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Project Activity
+                        <span class="text-danger">*</span>
+                    </label>
+
+                    <select class="form-select" name="activity_id" required>
+
+                        <option value="">
+                            Select Project Activity
+                        </option>
+
+                        {{#each activities}}
+
+                        <option value="{{activity_id}}" {{#if selected}}selected{{/if}}>
+                            {{activity_name}}
+                        </option>
+
+                        {{/each}}
+
+                    </select>
+
+                    <div class="form-text">
+                        Only activities belonging to this project are available.
+                    </div>
+
+                </div>
+
+                <!-- Material ID -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Material
+                        <span class="text-danger">*</span>
+                    </label>
+
+                    <!-- Selected Material -->
+                    <input type="hidden" name="material_id" class="requirement-material-id" value="{{material_id}}">
+
+                    <div class="border rounded p-2 mb-2 bg-light">
+
+                        <div class="small text-muted mb-1">
+                            Selected Material
+                        </div>
+
+                        <div class="requirement-selected-material fw-semibold">
+
+                            {{#if selectedMaterialName}}
+
+                            {{selectedMaterialName}}
+                            ({{selectedMaterialUnit}})
+
+                            {{else}}
+
+                            No material selected
+
+                            {{/if}}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Catalog Search -->
+                    <input type="search" class="form-control" name="q" placeholder="Search material name or ID..."
+                        autocomplete="off" hx-get="/projects/{{project_id}}/material-requirements/catalog"
+                        hx-trigger="input changed delay:350ms" hx-target="next .requirement-catalog-results"
+                        hx-swap="innerHTML">
+
+                    <!-- Catalog Search Results -->
+                    <div class="requirement-catalog-results mt-2" style="max-height: 250px; overflow-y: auto;">
+                    </div>
+
+                    <div class="form-text">
+                        Enter at least two characters, then choose a material from the results.
+                    </div>
+
+                </div>
+
+                <!-- Required Quantity -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Required Quantity
+                        <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="number" class="form-control" name="required_quantity" value="{{required_quantity}}"
+                        min="0.001" max="999999999999.999" step="0.001" required placeholder="Enter required quantity">
+
+                    <div class="form-text">
+                        Quantity must be greater than zero. The unit follows the selected material.
+                    </div>
+
+                </div>
+
+                <!-- Required Date -->
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Required Date
+                        <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text" class="form-control project-date-picker" name="required_date"
+                        value="{{required_date}}" placeholder="Select required date" autocomplete="off" required>
+
+                </div>
+
+                <!-- Notes -->
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Notes
+                    </label>
+
+                    <textarea class="form-control" name="notes" rows="3" style="resize: vertical; min-height: 90px;"
+                        placeholder="Enter material requirement notes">{{notes}}</textarea>
+
+                </div>
+
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <button type="button" class="btn btn-outline-secondary" data-requirement-close>
+
+                    Cancel
+
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+
+                    {{#if isEdit}}
+
+                    <i class="bi bi-check-circle me-1"></i>
+                    Save Changes
+
+                    {{else}}
+
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Save Requirement
+
+                    {{/if}}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

@@ -117,6 +117,20 @@ projectMembers.connection = connection;
 // Register project-specific member routes
 app.use('/projects/:projectId/members', projectMembers);
 
+// Project Material Requirements Management
+const projectMaterialRequirements = require(
+    './routes/project-material-requirements'
+);
+
+// Share the database connection
+projectMaterialRequirements.connection = connection;
+
+// Register Project Material Requirements routes
+app.use(
+    '/projects/:projectId/material-requirements',
+    projectMaterialRequirements
+);
+
 // Register Projects routes
 app.use('/projects', projects);
 
