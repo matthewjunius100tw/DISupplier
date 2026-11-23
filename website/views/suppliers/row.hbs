@@ -12,17 +12,17 @@
         <td>
             <div class="d-flex align-items-center gap-2">
 
-                <button type="button" class="btn btn-sm btn-outline-secondary" title="Show supplier information"
-                    aria-label="Toggle details for {{supplier_name}}" aria-expanded="false"
-                    aria-controls="supplier-details-{{supplier_id}}" onclick="
-                            const details = document.getElementById('supplier-details-{{supplier_id}}');
-                            const expanded = details.classList.toggle('d-none') === false;
-                            this.setAttribute('aria-expanded', String(expanded));
-                            this.querySelector('i').className =
-                                expanded ? 'bi bi-chevron-up' : 'bi bi-chevron-down';
-                        ">
-                    <i class="bi bi-chevron-down"></i>
+
+                <!-- Expand / Collapse Supplier Information -->
+                <button type="button" class="btn btn-sm btn-outline-secondary detail-expand-btn"
+                    data-bs-toggle="collapse" data-bs-target="#supplier-details-{{supplier_id}}" aria-expanded="false"
+                    aria-controls="supplier-details-{{supplier_id}}" aria-label="Toggle supplier details"
+                    title="Show Supplier Information">
+
+                    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+
                 </button>
+
 
                 <span>{{supplier_name}}</span>
 
@@ -61,7 +61,7 @@
 
         <!-- Actions -->
         <td class="text-center text-nowrap">
-            
+
             <!-- Edit -->
             <button type="button" class="btn btn-primary btn-sm" hx-get="/suppliers/{{supplier_id}}/edit"
                 hx-target="closest tbody" hx-swap="outerHTML">
@@ -102,75 +102,80 @@
     </tr>
 
     <!-- Expandable Supplier Information -->
-    <tr id="supplier-details-{{supplier_id}}" class="d-none">
+    <tr>
+        <td colspan="5" class="p-0 border-0">
 
-        <td colspan="5">
+            <div class="collapse" id="supplier-details-{{supplier_id}}">
 
-            <div class="border rounded p-3 bg-light">
+                <div class="border rounded p-3 bg-light m-2">
 
-                <h6 class="mb-3">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Supplier Information
-                </h6>
 
-                <div class="row g-3">
+                    <h6 class="mb-3">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Supplier Information
+                    </h6>
 
-                    <!-- Email -->
-                    <div class="col-md-6">
-                        <div class="small text-muted mb-1">
-                            Email
-                        </div>
-                        <div>{{email}}</div>
-                    </div>
+                    <div class="row g-3">
 
-                    <!-- Phone -->
-                    <div class="col-md-6">
-                        <div class="small text-muted mb-1">
-                            Phone
-                        </div>
-                        <div>{{phone}}</div>
-                    </div>
-
-                    <!-- Address -->
-                    <div class="col-md-6">
-                        <div class="small text-muted mb-1">
-                            Address
-                        </div>
-                        <div style="white-space: pre-wrap;">{{address}}</div>
-                    </div>
-
-                    <!-- Website -->
-                    <div class="col-md-6">
-                        <div class="small text-muted mb-1">
-                            Website
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="small text-muted mb-1">
+                                Email
+                            </div>
+                            <div>{{email}}</div>
                         </div>
 
-                        {{#if website}}
-                        <div>{{website}}</div>
-                        {{else}}
-                        <span class="text-muted">Not provided</span>
-                        {{/if}}
+                        <!-- Phone -->
+                        <div class="col-md-6">
+                            <div class="small text-muted mb-1">
+                                Phone
+                            </div>
+                            <div>{{phone}}</div>
+                        </div>
 
-                    </div>
+                        <!-- Address -->
+                        <div class="col-md-6">
+                            <div class="small text-muted mb-1">
+                                Address
+                            </div>
+                            <div style="white-space: pre-wrap;">{{address}}</div>
+                        </div>
 
-                    <!-- Relationship Summary -->
-                    <div class="col-12">
-                        <hr class="my-2">
+                        <!-- Website -->
+                        <div class="col-md-6">
+                            <div class="small text-muted mb-1">
+                                Website
+                            </div>
 
-                        <div class="d-flex flex-wrap gap-4 small">
-
-                            <span>
-                                <strong>Materials:</strong>
-                                {{material_count}}
-                            </span>
-
-                            <span>
-                                <strong>Purchase Orders:</strong>
-                                {{order_count}}
-                            </span>
+                            {{#if website}}
+                            <div>{{website}}</div>
+                            {{else}}
+                            <span class="text-muted">Not provided</span>
+                            {{/if}}
 
                         </div>
+
+                        <!-- Relationship Summary -->
+                        <div class="col-12">
+                            <hr class="my-2">
+
+                            <div class="d-flex flex-wrap gap-4 small">
+
+                                <span>
+                                    <strong>Materials:</strong>
+                                    {{material_count}}
+                                </span>
+
+                                <span>
+                                    <strong>Purchase Orders:</strong>
+                                    {{order_count}}
+                                </span>
+
+                            </div>
+                        </div>
+
                     </div>
+
 
                 </div>
 
