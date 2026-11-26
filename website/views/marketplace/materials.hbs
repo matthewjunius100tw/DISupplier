@@ -1,0 +1,355 @@
+<div class="container-fluid marketplace-page py-4">
+
+    <!-- Marketplace Page Header -->
+    <div class="marketplace-banner mb-4">
+        <div class="marketplace-banner-content">
+
+            <h2 class="fw-bold mb-2">
+                <i class="bi bi-box-seam me-2"></i>
+                Browse Materials
+            </h2>
+
+            <p class="mb-0">
+                Search construction materials, explore available
+                suppliers, and compare prices and stock quantities.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="marketplace-breadcrumb mb-3">
+
+        <a href="/marketplace" hx-get="/marketplace" hx-target="#main" hx-push-url="true">
+            Marketplace
+        </a>
+
+        <i class="bi bi-chevron-right mx-2"></i>
+
+        <span>Browse Materials</span>
+
+    </div>
+
+    <!-- Page Section Header -->
+    <div class="d-flex justify-content-between
+                align-items-center mb-3">
+
+        <h5 class="fw-bold mb-0">
+            <i class="bi bi-grid-3x3-gap me-2"></i>
+            Materials Catalog
+        </h5>
+
+        <span class="marketplace-result-count">
+            Total: {{totalRecordsDisplay}} materials
+        </span>
+
+    </div>
+
+    <!-- Search, Category and Sort Filters -->
+    <form id="marketplace-material-filter" class="marketplace-filter-panel mb-3" method="GET"
+        action="/marketplace/materials" hx-get="/marketplace/materials" hx-target="#main" hx-swap="innerHTML"
+        hx-push-url="true">
+
+        <div class="row g-3 align-items-end">
+
+            <!-- Search -->
+            <div class="col-lg-5 col-md-12">
+
+                <label class="form-label">
+                    Search Materials
+                </label>
+
+                <input type="search" name="search" class="form-control" value="{{search}}"
+                    placeholder="Search by material name or ID...">
+
+            </div>
+
+            <!-- Category -->
+            <div class="col-lg-3 col-md-5">
+
+                <label class="form-label">
+                    Material Category
+                </label>
+
+                <select name="category" class="form-select">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    {{#each categories}}
+
+                    <option value="{{category_id}}" {{#if selected}}selected{{/if}}>
+                        {{category_name}}
+                    </option>
+
+                    {{/each}}
+
+                </select>
+
+            </div>
+
+            <!-- Sort -->
+            <div class="col-lg-2 col-md-4">
+
+                <label class="form-label">
+                    Sort By
+                </label>
+
+                <select name="sort" class="form-select">
+
+                    {{#each sortOptions}}
+
+                    <option value="{{value}}" {{#if selected}}selected{{/if}}>
+                        {{label}}
+                    </option>
+
+                    {{/each}}
+
+                </select>
+
+            </div>
+
+            <!-- Search Button -->
+            <div class="col-lg-2 col-md-3">
+
+                <button type="submit" class="btn btn-primary w-100">
+
+                    <i class="bi bi-search me-1"></i>
+                    Search
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" name="pageSize" value="{{pageSize}}">
+
+    </form>
+
+    <!-- Pagination Settings -->
+    <div class="marketplace-list-toolbar mb-3">
+
+        <form action="/marketplace/materials" method="GET" hx-get="/marketplace/materials" hx-target="#main"
+            hx-swap="innerHTML" hx-push-url="true" class="d-flex align-items-center gap-2">
+
+            <span>Show</span>
+
+            <select name="pageSize" class="form-select form-select-sm
+                           marketplace-pagesize" onchange="this.form.requestSubmit()">
+
+                {{#each pageSizes}}
+                <option value="{{value}}" {{#if selected}}selected{{/if}}>
+                    {{value}}
+                </option>
+                {{/each}}
+
+            </select>
+
+            <span>per page</span>
+
+            <input type="hidden" name="search" value="{{search}}">
+
+            <input type="hidden" name="category" value="{{categoryId}}">
+
+            <input type="hidden" name="sort" value="{{sort}}">
+
+        </form>
+
+        <span class="marketplace-record-range">
+            Showing {{startRecord}}–{{endRecord}}
+            of {{totalRecordsDisplay}} materials
+        </span>
+
+    </div>
+
+    <!-- Materials Catalog -->
+    {{#if hasMaterials}}
+
+    <div class="row g-3">
+
+        {{#each materials}}
+
+        <div class="col-xl-4 col-md-6">
+
+            <div class="marketplace-material-card">
+
+                <!-- Category -->
+                <div class="marketplace-material-top">
+
+                    <div class="marketplace-material-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+
+                    <span class="marketplace-category-badge">
+                        {{category_name}}
+                    </span>
+
+                </div>
+
+                <!-- Material Name -->
+                <div class="marketplace-material-body">
+
+                    <h5 class="marketplace-material-name">
+                        {{material_name}}
+                    </h5>
+
+                    <div class="marketplace-material-id">
+                        Material ID: {{material_id}}
+                    </div>
+
+                    <p class="marketplace-material-spec">
+                        {{specification_display}}
+                    </p>
+
+                    <div class="marketplace-material-meta">
+
+                        <span>
+                            <i class="bi bi-rulers me-1"></i>
+                            Unit: {{unit}}
+                        </span>
+
+                        <span>
+                            <i class="bi bi-shop me-1"></i>
+                            {{supplier_count_display}} Suppliers
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="marketplace-material-footer">
+
+                    <div class="marketplace-price-block">
+
+                        <span class="marketplace-price-label">
+                            Starting from
+                        </span>
+
+                        <span class="marketplace-price-value">
+                            {{starting_price_display}}
+                        </span>
+
+                        <span class="marketplace-price-unit">
+                            per {{unit}}
+                        </span>
+
+                    </div>
+
+                    <a href="/marketplace/materials/{{material_id}}" hx-get="/marketplace/materials/{{material_id}}"
+                        hx-target="#main" hx-swap="innerHTML" hx-push-url="true" class="btn btn-primary w-100 mt-3">
+
+                        Compare Suppliers
+                        <i class="bi bi-arrow-right ms-2"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {{/each}}
+
+    </div>
+
+    {{else}}
+
+    <div class="marketplace-empty-state">
+
+        <i class="bi bi-search"></i>
+
+        <h5>No Materials Found</h5>
+
+        <p>
+            No available materials match your current filters.
+        </p>
+
+        <a href="/marketplace/materials" hx-get="/marketplace/materials" hx-target="#main" hx-push-url="true"
+            class="btn btn-outline-primary">
+
+            Clear Filters
+
+        </a>
+
+    </div>
+
+    {{/if}}
+
+    <!-- Server-Side Pagination -->
+    {{#if hasMaterials}}
+
+    <div class="marketplace-pagination-wrapper mt-4">
+
+        <nav aria-label="Materials pagination">
+
+            <ul class="pagination justify-content-center
+                       flex-wrap mb-0">
+
+                <!-- First -->
+                <li class="page-item
+                    {{#unless hasPrevious}}disabled{{/unless}}">
+
+                    <a class="page-link" href="{{firstUrl}}" hx-get="{{firstUrl}}" hx-target="#main" hx-push-url="true">
+                        First
+                    </a>
+
+                </li>
+
+                <!-- Previous -->
+                <li class="page-item
+                    {{#unless hasPrevious}}disabled{{/unless}}">
+
+                    <a class="page-link" href="{{previousUrl}}" hx-get="{{previousUrl}}" hx-target="#main"
+                        hx-push-url="true">
+                        Previous
+                    </a>
+
+                </li>
+
+                <!-- Sliding Page Numbers -->
+                {{#each pages}}
+
+                <li class="page-item
+                    {{#if active}}active{{/if}}">
+
+                    <a class="page-link" href="{{url}}" hx-get="{{url}}" hx-target="#main" hx-push-url="true">
+                        {{number}}
+                    </a>
+
+                </li>
+
+                {{/each}}
+
+                <!-- Next -->
+                <li class="page-item
+                    {{#unless hasNext}}disabled{{/unless}}">
+
+                    <a class="page-link" href="{{nextUrl}}" hx-get="{{nextUrl}}" hx-target="#main" hx-push-url="true">
+                        Next
+                    </a>
+
+                </li>
+
+                <!-- Last -->
+                <li class="page-item
+                    {{#unless hasNext}}disabled{{/unless}}">
+
+                    <a class="page-link" href="{{lastUrl}}" hx-get="{{lastUrl}}" hx-target="#main" hx-push-url="true">
+                        Last
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+    {{/if}}
+
+</div>
