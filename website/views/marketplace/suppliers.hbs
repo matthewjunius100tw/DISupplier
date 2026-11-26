@@ -1,0 +1,402 @@
+
+<div class="container-fluid marketplace-page py-4">
+
+    <!-- Supplier Directory Banner -->
+    <div class="marketplace-banner mb-4">
+        <div class="marketplace-banner-content">
+
+            <h2 class="fw-bold mb-2">
+                <i class="bi bi-shop me-2"></i>
+                Browse Suppliers
+            </h2>
+
+            <p class="mb-0">
+                Discover construction suppliers, explore their
+                storefronts, and browse the materials they offer.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="marketplace-breadcrumb mb-3">
+
+        <a href="/marketplace"
+           hx-get="/marketplace"
+           hx-target="#main"
+           hx-swap="innerHTML"
+           hx-push-url="true">
+            Marketplace
+        </a>
+
+        <i class="bi bi-chevron-right mx-2"></i>
+
+        <span>Browse Suppliers</span>
+
+    </div>
+
+    <!-- Section Title -->
+    <div class="d-flex justify-content-between
+                align-items-center mb-3">
+
+        <h5 class="fw-bold mb-0">
+            <i class="bi bi-buildings me-2"></i>
+            Supplier Directory
+        </h5>
+
+        <span class="marketplace-result-count">
+            Total: {{totalRecordsDisplay}} suppliers
+        </span>
+
+    </div>
+
+    <!-- Supplier Search and Sorting -->
+    <form id="marketplace-supplier-filter"
+          class="marketplace-filter-panel mb-3"
+          method="GET"
+          action="/marketplace/suppliers"
+          hx-get="/marketplace/suppliers"
+          hx-target="#main"
+          hx-swap="innerHTML"
+          hx-push-url="true">
+
+        <div class="row g-3 align-items-end">
+
+            <!-- Search Supplier -->
+            <div class="col-lg-7 col-md-6">
+
+                <label class="form-label">
+                    Search Suppliers
+                </label>
+
+                <input
+                    type="search"
+                    name="search"
+                    class="form-control"
+                    value="{{search}}"
+                    placeholder="Search by supplier name or ID...">
+
+            </div>
+
+            <!-- Sort -->
+            <div class="col-lg-3 col-md-4">
+
+                <label class="form-label">
+                    Sort By
+                </label>
+
+                <select
+                    name="sort"
+                    class="form-select">
+
+                    {{#each sortOptions}}
+
+                    <option value="{{value}}"
+                        {{#if selected}}selected{{/if}}>
+                        {{label}}
+                    </option>
+
+                    {{/each}}
+
+                </select>
+
+            </div>
+
+            <!-- Search Button -->
+            <div class="col-lg-2 col-md-2">
+
+                <button
+                    class="btn btn-primary w-100"
+                    type="submit">
+
+                    <i class="bi bi-search me-1"></i>
+                    Search
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <input
+            type="hidden"
+            name="pageSize"
+            value="{{pageSize}}">
+
+    </form>
+
+    <!-- Page Size and Result Range -->
+    <div class="marketplace-list-toolbar mb-3">
+
+        <form
+            action="/marketplace/suppliers"
+            method="GET"
+            hx-get="/marketplace/suppliers"
+            hx-target="#main"
+            hx-swap="innerHTML"
+            hx-push-url="true"
+            class="d-flex align-items-center gap-2">
+
+            <span>Show</span>
+
+            <select
+                name="pageSize"
+                class="form-select form-select-sm
+                       marketplace-pagesize"
+                onchange="this.form.requestSubmit()">
+
+                {{#each pageSizes}}
+
+                <option value="{{value}}"
+                    {{#if selected}}selected{{/if}}>
+                    {{value}}
+                </option>
+
+                {{/each}}
+
+            </select>
+
+            <span>per page</span>
+
+            <input
+                type="hidden"
+                name="search"
+                value="{{search}}">
+
+            <input
+                type="hidden"
+                name="sort"
+                value="{{sort}}">
+
+        </form>
+
+        <span class="marketplace-record-range">
+            Showing {{startRecord}}–{{endRecord}}
+            of {{totalRecordsDisplay}} suppliers
+        </span>
+
+    </div>
+
+    <!-- Supplier Cards -->
+    {{#if hasSuppliers}}
+
+    <div class="row g-3">
+
+        {{#each suppliers}}
+
+        <div class="col-xl-4 col-md-6">
+
+            <div class="marketplace-supplier-card">
+
+                <!-- Card Header -->
+                <div class="marketplace-supplier-card-header">
+
+                    <div class="marketplace-supplier-card-icon">
+                        <i class="bi bi-shop"></i>
+                    </div>
+
+                    <span class="marketplace-supplier-card-status">
+                        <i class="bi bi-check-circle me-1"></i>
+                        Active Supplier
+                    </span>
+
+                </div>
+
+                <!-- Supplier Name -->
+                <div class="marketplace-supplier-card-body">
+
+                    <h5 class="marketplace-supplier-card-name">
+                        {{supplier_name}}
+                    </h5>
+
+                    <div class="marketplace-supplier-card-id">
+                        Supplier ID: {{supplier_id}}
+                    </div>
+
+                    <div class="marketplace-supplier-card-address">
+
+                        <i class="bi bi-geo-alt me-2"></i>
+
+                        <span>
+                            {{address_display}}
+                        </span>
+
+                    </div>
+
+                    <!-- Supplier Statistics -->
+                    <div class="marketplace-supplier-card-stats">
+
+                        <div class="marketplace-supplier-card-stat">
+
+                            <span class="marketplace-supplier-card-stat-value">
+                                {{total_materials_display}}
+                            </span>
+
+                            <span class="marketplace-supplier-card-stat-label">
+                                Materials
+                            </span>
+
+                        </div>
+
+                        <div class="marketplace-supplier-card-stat">
+
+                            <span class="marketplace-supplier-card-stat-value">
+                                {{available_materials_display}}
+                            </span>
+
+                            <span class="marketplace-supplier-card-stat-label">
+                                Available
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Card Footer -->
+                <div class="marketplace-supplier-card-footer">
+
+                    <a
+                        href="/marketplace/suppliers/{{supplier_id}}"
+                        hx-get="/marketplace/suppliers/{{supplier_id}}"
+                        hx-target="#main"
+                        hx-swap="innerHTML"
+                        hx-push-url="true"
+                        class="btn btn-primary w-100 mt-3">
+
+                        View Storefront
+                        <i class="bi bi-arrow-right ms-2"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {{/each}}
+
+    </div>
+
+    {{else}}
+
+    <!-- No Search Results -->
+    <div class="marketplace-empty-state">
+
+        <i class="bi bi-shop"></i>
+
+        <h5>No Suppliers Found</h5>
+
+        <p>
+            No active suppliers match your search.
+        </p>
+
+        <a href="/marketplace/suppliers"
+           hx-get="/marketplace/suppliers"
+           hx-target="#main"
+           hx-push-url="true"
+           class="btn btn-outline-primary">
+
+            Clear Search
+
+        </a>
+
+    </div>
+
+    {{/if}}
+
+    <!-- Pagination -->
+    {{#if hasSuppliers}}
+
+    <div class="marketplace-pagination-wrapper mt-4">
+
+        <nav aria-label="Supplier directory pagination">
+
+            <ul class="pagination justify-content-center
+                       flex-wrap mb-0">
+
+                <!-- First Page -->
+                <li class="page-item
+                    {{#unless hasPrevious}}disabled{{/unless}}">
+
+                    <a class="page-link"
+                       href="{{firstUrl}}"
+                       hx-get="{{firstUrl}}"
+                       hx-target="#main"
+                       hx-push-url="true">
+                        First
+                    </a>
+
+                </li>
+
+                <!-- Previous Page -->
+                <li class="page-item
+                    {{#unless hasPrevious}}disabled{{/unless}}">
+
+                    <a class="page-link"
+                       href="{{previousUrl}}"
+                       hx-get="{{previousUrl}}"
+                       hx-target="#main"
+                       hx-push-url="true">
+                        Previous
+                    </a>
+
+                </li>
+
+                <!-- Page Numbers -->
+                {{#each pages}}
+
+                <li class="page-item
+                    {{#if active}}active{{/if}}">
+
+                    <a class="page-link"
+                       href="{{url}}"
+                       hx-get="{{url}}"
+                       hx-target="#main"
+                       hx-push-url="true">
+                        {{number}}
+                    </a>
+
+                </li>
+
+                {{/each}}
+
+                <!-- Next Page -->
+                <li class="page-item
+                    {{#unless hasNext}}disabled{{/unless}}">
+
+                    <a class="page-link"
+                       href="{{nextUrl}}"
+                       hx-get="{{nextUrl}}"
+                       hx-target="#main"
+                       hx-push-url="true">
+                        Next
+                    </a>
+
+                </li>
+
+                <!-- Last Page -->
+                <li class="page-item
+                    {{#unless hasNext}}disabled{{/unless}}">
+
+                    <a class="page-link"
+                       href="{{lastUrl}}"
+                       hx-get="{{lastUrl}}"
+                       hx-target="#main"
+                       hx-push-url="true">
+                        Last
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+    {{/if}}
+
+</div>

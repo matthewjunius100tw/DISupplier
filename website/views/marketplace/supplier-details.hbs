@@ -1,0 +1,666 @@
+<div class="container-fluid marketplace-page py-4">
+
+    <!-- Supplier Storefront Banner -->
+    <div class="marketplace-banner mb-4">
+
+        <div class="marketplace-banner-content">
+
+            <h2 class="fw-bold mb-2">
+                <i class="bi bi-shop me-2"></i>
+                Supplier Storefront
+            </h2>
+
+            <p class="mb-0">
+                Explore supplier information, available materials,
+                current listed prices, and stock quantities.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="marketplace-breadcrumb mb-3">
+
+        <a href="/marketplace" hx-get="/marketplace" hx-target="#main" hx-swap="innerHTML" hx-push-url="true">
+            Marketplace
+        </a>
+
+        <i class="bi bi-chevron-right mx-2"></i>
+
+        <a href="/marketplace/suppliers" hx-get="/marketplace/suppliers" hx-target="#main" hx-swap="innerHTML"
+            hx-push-url="true">
+            Browse Suppliers
+        </a>
+
+        <i class="bi bi-chevron-right mx-2"></i>
+
+        <span>{{supplier.supplier_name}}</span>
+
+    </div>
+
+    <!-- Supplier Information -->
+    <div class="marketplace-storefront-profile mb-4">
+
+        <div class="marketplace-storefront-profile-header">
+
+            <div class="marketplace-storefront-logo">
+                <i class="bi bi-shop"></i>
+            </div>
+
+            <div class="marketplace-storefront-profile-heading">
+
+                <h3>
+                    {{supplier.supplier_name}}
+                </h3>
+
+                <div class="marketplace-storefront-supplier-id">
+                    Supplier ID: {{supplier.supplier_id}}
+                </div>
+
+                <span class="badge bg-success mt-2">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Active Supplier
+                </span>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <!-- Contact Information -->
+        <div class="row g-3">
+
+            <div class="col-md-6">
+
+                <div class="marketplace-storefront-info">
+
+                    <div class="marketplace-storefront-info-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+
+                    <div class="marketplace-storefront-info-content">
+
+                        <span class="marketplace-storefront-info-label">
+                            Email
+                        </span>
+
+                        <span class="marketplace-storefront-info-value">
+                            {{supplier.email_display}}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="marketplace-storefront-info">
+
+                    <div class="marketplace-storefront-info-icon">
+                        <i class="bi bi-telephone"></i>
+                    </div>
+
+                    <div class="marketplace-storefront-info-content">
+
+                        <span class="marketplace-storefront-info-label">
+                            Phone
+                        </span>
+
+                        <span class="marketplace-storefront-info-value">
+                            {{supplier.phone_display}}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="marketplace-storefront-info">
+
+                    <div class="marketplace-storefront-info-icon">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+
+                    <div class="marketplace-storefront-info-content">
+
+                        <span class="marketplace-storefront-info-label">
+                            Address
+                        </span>
+
+                        <span class="marketplace-storefront-info-value">
+                            {{supplier.address_display}}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="marketplace-storefront-info">
+
+                    <div class="marketplace-storefront-info-icon">
+                        <i class="bi bi-globe"></i>
+                    </div>
+
+                    <div class="marketplace-storefront-info-content">
+
+                        <span class="marketplace-storefront-info-label">
+                            Website
+                        </span>
+
+                        <span class="marketplace-storefront-info-value">
+                            {{supplier.website_display}}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Supplier Statistics -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-6">
+
+            <div class="marketplace-comparison-stat">
+
+                <div class="marketplace-comparison-stat-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+
+                <div class="marketplace-comparison-stat-value">
+                    {{summary.total_materials}}
+                </div>
+
+                <div class="marketplace-comparison-stat-label">
+                    Total Materials
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="marketplace-comparison-stat">
+
+                <div class="marketplace-comparison-stat-icon">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+
+                <div class="marketplace-comparison-stat-value">
+                    {{summary.available_materials}}
+                </div>
+
+                <div class="marketplace-comparison-stat-label">
+                    Available Materials
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Materials Section Heading -->
+    <div class="d-flex flex-wrap
+                justify-content-between
+                align-items-center gap-2 mb-3">
+
+        <h5 class="fw-bold mb-0">
+            <i class="bi bi-grid-3x3-gap me-2"></i>
+            Supplier Materials Catalog
+        </h5>
+
+        <a href="/marketplace/suppliers" hx-get="/marketplace/suppliers" hx-target="#main" hx-swap="innerHTML"
+            hx-push-url="true" class="btn btn-outline-secondary btn-sm">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Suppliers
+
+        </a>
+
+    </div>
+
+    <!-- Search and Sort Supplier Materials -->
+    <form id="marketplace-storefront-filter" class="marketplace-filter-panel mb-3" method="GET"
+        action="/marketplace/suppliers/{{supplier.supplier_id}}"
+        hx-get="/marketplace/suppliers/{{supplier.supplier_id}}" hx-target="#main" hx-swap="innerHTML"
+        hx-push-url="true">
+
+        <div class="row g-3 align-items-end">
+
+            <!-- Search Materials -->
+            <div class="col-lg-4 col-md-6">
+
+                <label class="form-label">
+                    Search Supplier Materials
+                </label>
+
+                <input type="search" name="search" class="form-control" value="{{search}}"
+                    placeholder="Search material name or ID...">
+
+            </div>
+
+            <!-- Material Category -->
+            <div class="col-lg-3 col-md-6">
+
+                <label class="form-label">
+                    Material Category
+                </label>
+
+                <select name="category" class="form-select">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    {{#each categories}}
+
+                    <option value="{{category_id}}" {{#if selected}}selected{{/if}}>
+
+                        {{category_name}}
+
+                    </option>
+
+                    {{/each}}
+
+                </select>
+
+            </div>
+
+            <!-- Sort By -->
+            <div class="col-lg-3 col-md-6">
+
+                <label class="form-label">
+                    Sort By
+                </label>
+
+                <select name="sort" class="form-select">
+
+                    {{#each sortOptions}}
+
+                    <option value="{{value}}" {{#if selected}}selected{{/if}}>
+
+                        {{label}}
+
+                    </option>
+
+                    {{/each}}
+
+                </select>
+
+            </div>
+
+            <!-- Search Button -->
+            <div class="col-lg-2 col-md-6">
+
+                <button type="submit" class="btn btn-primary w-100">
+
+                    <i class="bi bi-search me-1"></i>
+                    Search
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" name="pageSize" value="{{pageSize}}">
+
+    </form>
+
+    <!-- Pagination Settings -->
+    <div class="marketplace-list-toolbar mb-3">
+
+        <form action="/marketplace/suppliers/{{supplier.supplier_id}}" method="GET"
+            hx-get="/marketplace/suppliers/{{supplier.supplier_id}}" hx-target="#main" hx-swap="innerHTML"
+            hx-push-url="true" class="d-flex align-items-center gap-2">
+
+            <span>Show</span>
+
+            <select name="pageSize" class="form-select form-select-sm
+                       marketplace-pagesize" onchange="this.form.requestSubmit()">
+
+                {{#each pageSizes}}
+
+                <option value="{{value}}" {{#if selected}}selected{{/if}}>
+
+                    {{value}}
+
+                </option>
+
+                {{/each}}
+
+            </select>
+
+            <span>per page</span>
+
+            <input type="hidden" name="search" value="{{search}}">
+
+            <input type="hidden" name="sort" value="{{sort}}">
+
+            <input type="hidden" name="category" value="{{categoryId}}">
+
+        </form>
+
+        <span class="marketplace-record-range">
+            Showing {{startRecord}}–{{endRecord}}
+            of {{totalRecordsDisplay}} materials
+        </span>
+
+    </div>
+
+    <!-- Supplier Materials Table -->
+    {{#if hasMaterials}}
+
+    <div class="marketplace-table-container">
+
+        <div class="table-responsive">
+
+            <table class="table marketplace-storefront-table
+                       align-middle mb-0">
+
+                <thead>
+
+                    <tr>
+                        <th>Material</th>
+                        <th>Category</th>
+                        <th>Unit Price</th>
+                        <th>Available Quantity</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {{#each materials}}
+
+                    <!-- Material Row -->
+                    <tr>
+
+                        <!-- Material Information -->
+                        <td>
+
+                            <div class="marketplace-storefront-material-name">
+                                {{material_name}}
+                            </div>
+
+                            <div class="marketplace-storefront-material-id">
+                                ID: {{material_id}}
+                            </div>
+
+                        </td>
+
+                        <!-- Category -->
+                        <td>
+
+                            <span class="marketplace-category-badge">
+                                {{category_name}}
+                            </span>
+
+                        </td>
+
+                        <!-- Price -->
+                        <td>
+
+                            <span class="marketplace-table-price">
+                                {{price_display}}
+                            </span>
+
+                            <div class="marketplace-table-unit">
+                                per {{unit}}
+                            </div>
+
+                        </td>
+
+                        <!-- Quantity -->
+                        <td>
+
+                            <span class="marketplace-table-quantity">
+                                {{quantity_display}}
+                            </span>
+
+                            <span class="marketplace-table-unit">
+                                {{unit}}
+                            </span>
+
+                        </td>
+
+                        <!-- Availability -->
+                        <td>
+
+                            <span class="badge {{statusClass}}">
+                                {{statusLabel}}
+                            </span>
+
+                        </td>
+
+                        <!-- Actions -->
+                        <td>
+
+                            <div class="marketplace-storefront-actions">
+
+                                <!-- Expand Material Details -->
+                                <button type="button" class="btn btn-outline-secondary
+                                           btn-sm" data-bs-toggle="collapse"
+                                    data-bs-target="#storefront-material-{{supplier_material_id}}" aria-expanded="false"
+                                    aria-controls="storefront-material-{{supplier_material_id}}">
+
+                                    <i class="bi bi-chevron-down me-1"></i>
+                                    Details
+
+                                </button>
+
+                                <!-- Compare Suppliers -->
+                                <a href="/marketplace/materials/{{material_id}}?fromSupplier={{../supplier.supplier_id}}"
+                                    hx-get="/marketplace/materials/{{material_id}}?fromSupplier={{../supplier.supplier_id}}"
+                                    hx-target="#main" hx-swap="innerHTML" hx-push-url="true"
+                                    class="btn btn-outline-primary btn-sm">
+
+                                    <i class="bi bi-arrow-left-right me-1"></i>
+                                    Compare
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    <!-- Expandable Material Details -->
+                    <tr class="marketplace-supplier-detail-row">
+
+                        <td colspan="6" class="p-0">
+
+                            <div class="collapse" id="storefront-material-{{supplier_material_id}}">
+
+                                <div class="marketplace-supplier-detail">
+
+                                    <div class="row g-3">
+
+                                        <div class="col-md-4">
+
+                                            <strong>
+                                                Material Name
+                                            </strong>
+
+                                            <div>
+                                                {{material_name}}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <strong>
+                                                Material ID
+                                            </strong>
+
+                                            <div>
+                                                {{material_id}}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <strong>
+                                                Material Unit
+                                            </strong>
+
+                                            <div>
+                                                {{unit}}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-12">
+
+                                            <strong>
+                                                Material Specification
+                                            </strong>
+
+                                            <div>
+                                                {{specification_display}}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {{/each}}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {{else}}
+
+    <!-- No Materials -->
+    <div class="marketplace-empty-state">
+
+        <i class="bi bi-box-seam"></i>
+
+        <h5>No Materials Found</h5>
+
+        <p>
+            No materials match the current search.
+        </p>
+
+        <a href="/marketplace/suppliers/{{supplier.supplier_id}}"
+            hx-get="/marketplace/suppliers/{{supplier.supplier_id}}" hx-target="#main" hx-push-url="true"
+            class="btn btn-outline-primary">
+
+            Clear Search
+
+        </a>
+
+    </div>
+
+    {{/if}}
+
+    <!-- Pagination -->
+    {{#if hasMaterials}}
+
+    <div class="marketplace-pagination-wrapper mt-4">
+
+        <nav aria-label="Storefront materials pagination">
+
+            <ul class="pagination justify-content-center
+                       flex-wrap mb-0">
+
+                <!-- First -->
+                <li class="page-item
+                    {{#unless hasPrevious}}disabled{{/unless}}">
+
+                    <a class="page-link" href="{{firstUrl}}" hx-get="{{firstUrl}}" hx-target="#main" hx-push-url="true">
+                        First
+                    </a>
+
+                </li>
+
+                <!-- Previous -->
+                <li class="page-item
+                    {{#unless hasPrevious}}disabled{{/unless}}">
+
+                    <a class="page-link" href="{{previousUrl}}" hx-get="{{previousUrl}}" hx-target="#main"
+                        hx-push-url="true">
+                        Previous
+                    </a>
+
+                </li>
+
+                <!-- Page Numbers -->
+                {{#each pages}}
+
+                <li class="page-item
+                    {{#if active}}active{{/if}}">
+
+                    <a class="page-link" href="{{url}}" hx-get="{{url}}" hx-target="#main" hx-push-url="true">
+                        {{number}}
+                    </a>
+
+                </li>
+
+                {{/each}}
+
+                <!-- Next -->
+                <li class="page-item
+                    {{#unless hasNext}}disabled{{/unless}}">
+
+                    <a class="page-link" href="{{nextUrl}}" hx-get="{{nextUrl}}" hx-target="#main" hx-push-url="true">
+                        Next
+                    </a>
+
+                </li>
+
+                <!-- Last -->
+                <li class="page-item
+                    {{#unless hasNext}}disabled{{/unless}}">
+
+                    <a class="page-link" href="{{lastUrl}}" hx-get="{{lastUrl}}" hx-target="#main" hx-push-url="true">
+                        Last
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+    {{/if}}
+
+</div>

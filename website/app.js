@@ -142,6 +142,14 @@ suppliers.connection = connection;
 // Register Supplier Management routes
 app.use('/suppliers', suppliers);
 
+// Marketplace Management
+const marketplace = require('./routes/marketplace');
+
+// Share the database connection with the marketplace router
+marketplace.connection = connection;
+
+// Register Marketplace routes
+app.use('/marketplace', marketplace);
 
 // Start web server
 app.listen(80, () => {
